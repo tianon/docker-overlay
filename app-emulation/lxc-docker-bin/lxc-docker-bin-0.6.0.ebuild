@@ -6,29 +6,18 @@ EAPI=5
 
 DESCRIPTION="Docker complements LXC with a high-level API which operates at the process level. It runs unix processes with strong guarantees of isolation and repeatability across servers."
 HOMEPAGE="http://www.docker.io/"
-SRC_URI=""
+SRC_URI="https://get.docker.io/ubuntu/pool/main/l/lxc-docker-${PV}/lxc-docker-${PV}_${PV}_amd64.deb"
+KEYWORDS="-* ~amd64"
 
-EGIT_REPO_URI="git://github.com/dotcloud/docker.git"
-if [[ ${PV} == *9999 ]]; then
-	KEYWORDS=""
-else
-	EGIT_COMMIT="v${PV}"
-	KEYWORDS="~amd64"
-fi
-
-inherit bash-completion-r1 git-2 linux-info systemd user
+inherit unpacker linux-info systemd
 
 LICENSE="Apache-2.0"
 SLOT="0"
 IUSE=""
 
-DEPEND="
-	>=dev-lang/go-1.1
-	dev-vcs/git
-	dev-vcs/mercurial
-"
+DEPEND=""
 RDEPEND="
-	!app-emulation/lxc-docker-bin
+	!app-emulation/lxc-docker
 	app-emulation/lxc
 	net-firewall/iptables
 	sys-apps/iproute2
@@ -42,28 +31,19 @@ RESTRICT="strip"
 
 ERROR_AUFS_FS="AUFS_FS is required to be set if and only if aufs-sources are used"
 
+S="${WORKDIR}"
+
 pkg_setup() {
 	CONFIG_CHECK+=" ~NETFILTER_XT_MATCH_ADDRTYPE ~NF_NAT ~NF_NAT_NEEDED ~AUFS_FS"
 	check_extra_config
 }
 
-src_compile() {
-	emake VERBOSE=1
-}
-
 src_install() {
-	dobin bin/docker
-	dodoc AUTHORS CONTRIBUTING.md NOTICE README.md
+	dobin usr/bin/docker
 	
 	newinitd "${FILESDIR}/docker.initd" docker
 	
 	systemd_dounit "${FILESDIR}/docker.service"
-	
-	insinto /usr/share/${P}/contrib
-	doins contrib/README contrib/mkimage-*
-	cp -R "${S}/contrib"/{docker-build,vagrant-docker} "${D}/usr/share/${P}/contrib/"
-	
-	newbashcomp contrib/docker.bash docker
 }
 
 pkg_postinst() {
