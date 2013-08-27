@@ -7,9 +7,7 @@ After=multi-user.target
 Type=simple
 Nice=5
 ExecStartPre=/bin/mount --make-rprivate /
-ExecStartPre=/sbin/sysctl -w net.ipv4.ip_forward=1
 ExecStart=/usr/bin/docker -d -p /run/docker.pid
-ExecStop=/sbin/sysctl -w net.ipv4.ip_forward=0
 TimeoutSec=60
 
 [Install]
