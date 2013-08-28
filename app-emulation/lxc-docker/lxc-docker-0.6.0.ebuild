@@ -55,7 +55,7 @@ src_compile() {
 	ln -sf "$(pwd -P)" .gopath/src/github.com/dotcloud/docker || die
 	# the official revisions of the docker dependencies are in the Dockerfile directly, so we'll just do some lovely sed magic to snag those
 	grep $'run\tPKG=' Dockerfile \
-		| sed -r 's!^run\t([^;]+);\s*(git|hg).*(git\s+checkout\s+-f|hg\s+checkout).*$!(\1; \2 clone -q http://$PKG .gopath/src/$PKG \&\& cd .gopath/src/$PKG \&\& \3 -q $REV) || die!' \
+		| sed -r 's!^run\t([^;]+);\s*(git|hg).*(git\s+checkout\s+-f|hg\s+checkout).*$!(\1; \2 clone -q https://$PKG .gopath/src/$PKG \&\& cd .gopath/src/$PKG \&\& \3 -q $REV) || die!' \
 		| sh || die
 
 	# commands stolen from hack/release/make.sh (go build)
