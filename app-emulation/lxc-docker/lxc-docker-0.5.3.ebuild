@@ -61,9 +61,7 @@ src_install() {
 	
 	insinto /usr/share/${P}/contrib
 	doins contrib/README contrib/mkimage-*
-	cp -R "${S}/contrib"/{docker-build,vagrant-docker} "${D}/usr/share/${P}/contrib/"
-	
-	newbashcomp contrib/docker.bash docker
+	cp -R "${S}/contrib"/vagrant-docker "${D}/usr/share/${P}/contrib/"
 }
 
 pkg_postinst() {
