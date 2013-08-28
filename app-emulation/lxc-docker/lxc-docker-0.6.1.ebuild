@@ -69,7 +69,7 @@ src_compile() {
 
 src_install() {
 	dobin bin/docker
-	dodoc AUTHORS CONTRIBUTING.md NOTICE README.md
+	dodoc AUTHORS CONTRIBUTING.md CHANGELOG.md MAINTAINERS NOTICE README.md
 
 	newinitd "${FILESDIR}/docker.initd" docker
 
@@ -77,7 +77,7 @@ src_install() {
 
 	insinto /usr/share/${P}/contrib
 	doins contrib/README contrib/mkimage-*
-	cp -R "${S}/contrib"/vagrant-docker "${D}/usr/share/${P}/contrib/"
+	cp -R "${S}/contrib"/{vagrant-docker,docker-brew} "${D}/usr/share/${P}/contrib/"
 
 	newbashcomp contrib/docker.bash docker
 }

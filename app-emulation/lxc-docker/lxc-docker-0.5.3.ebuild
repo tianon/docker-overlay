@@ -53,7 +53,7 @@ src_compile() {
 
 src_install() {
 	dobin bin/docker
-	dodoc AUTHORS CONTRIBUTING.md NOTICE README.md
+	dodoc AUTHORS CONTRIBUTING.md CHANGELOG.md MAINTAINERS NOTICE README.md
 
 	newinitd "${FILESDIR}/docker.initd" docker
 

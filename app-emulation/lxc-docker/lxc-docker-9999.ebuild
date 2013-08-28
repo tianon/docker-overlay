@@ -48,45 +48,38 @@ pkg_setup() {
 }
 
 src_compile() {
-	if [ -f Makefile ]; then
-		emake VERBOSE=1
-	else
-		# they be stealing our Makefile!
+	# they be stealing our Makefile!
 
-		# commands stolen from Dockerfile (go get)
-		mkdir -p .gopath/src/github.com/dotcloud || die
-		ln -sf "$(pwd -P)" .gopath/src/github.com/dotcloud/docker || die
-		# the official revisions of the docker dependencies are in the Dockerfile directly, so we'll just do some lovely sed magic to snag those
-		grep $'run\tPKG=' Dockerfile \
-			| sed -r 's!^run\t([^;]+);\s*(git|hg).*(git\s+checkout\s+-f|hg\s+checkout).*$!(\1; \2 clone -q https://$PKG .gopath/src/$PKG \&\& cd .gopath/src/$PKG \&\& \3 -q $REV) || die!' \
-			| sh || die
+	# commands stolen from Dockerfile (go get)
+	mkdir -p .gopath/src/github.com/dotcloud || die
+	ln -sf "$(pwd -P)" .gopath/src/github.com/dotcloud/docker || die
+	# the official revisions of the docker dependencies are in the Dockerfile directly, so we'll just do some lovely sed magic to snag those
+	grep $'run\tPKG=' Dockerfile \
+		| sed -r 's!^run\t([^;]+);\s*(git|hg).*(git\s+checkout\s+-f|hg\s+checkout).*$!(\1; \2 clone -q https://$PKG .gopath/src/$PKG \&\& cd .gopath/src/$PKG \&\& \3 -q $REV) || die!' \
+		| sh || die
 
-		# commands stolen from hack/release/make.sh (go build)
-		export GOPATH="$(pwd -P)/.gopath"
-		VERSION=$(cat ./VERSION)
-		GITCOMMIT=$(git rev-parse --short HEAD)
-		test -n "$(git status --porcelain)" && GITCOMMIT="$GITCOMMIT-dirty"
-		mkdir -p bin || die
-		go build -v -o bin/docker -ldflags "-X main.GITCOMMIT $GITCOMMIT -X main.VERSION $VERSION -w" ./docker || die
-	fi
+	# commands stolen from hack/release/make.sh (go build)
+	export GOPATH="$(pwd -P)/.gopath"
+	VERSION=$(cat ./VERSION)
+	GITCOMMIT=$(git rev-parse --short HEAD)
+	test -n "$(git status --porcelain)" && GITCOMMIT="$GITCOMMIT-dirty"
+	mkdir -p bin || die
+	go build -v -o bin/docker -ldflags "-X main.GITCOMMIT $GITCOMMIT -X main.VERSION $VERSION -w" ./docker || die
 }
 
 src_install() {
 	dobin bin/docker
-	dodoc AUTHORS CONTRIBUTING.md NOTICE README.md
+	dodoc AUTHORS CONTRIBUTING.md CHANGELOG.md MAINTAINERS NOTICE README.md
 
 	newinitd "${FILESDIR}/docker.initd" docker
 
 	systemd_dounit "${FILESDIR}/docker.service"
 
 	insinto /usr/share/${P}/contrib
-	doins contrib/README contrib/mkimage-*
-	cp -R "${S}/contrib"/vagrant-docker "${D}/usr/share/${P}/contrib/"
+	doins contrib/{README,MAINTAINERS} contrib/mkimage-*
+	cp -R "${S}/contrib"/{vagrant-docker,docker-brew} "${D}/usr/share/${P}/contrib/"
 
-	if [ -e contrib/docker.bash ]; then
-		# install bash completion script if available
-		newbashcomp contrib/docker.bash docker
-	fi
+	newbashcomp contrib/docker.bash docker
 }
 
 pkg_postinst() {
