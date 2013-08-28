@@ -5,7 +5,6 @@ After=multi-user.target
 
 [Service]
 Type=simple
-Nice=5
 ExecStartPre=/bin/mount --make-rprivate /
 ExecStart=/usr/bin/docker -d -p /run/docker.pid
 TimeoutSec=60
