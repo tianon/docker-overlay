@@ -60,11 +60,13 @@ src_compile() {
 
 	# commands stolen from hack/release/make.sh (go build)
 	export GOPATH="$(pwd -P)/.gopath"
+	export CGO_ENABLED=0 # we need static linking!
 	VERSION=$(cat ./VERSION)
 	GITCOMMIT=$(git rev-parse --short HEAD)
 	test -n "$(git status --porcelain)" && GITCOMMIT="$GITCOMMIT-dirty"
 	mkdir -p bin || die
-	go build -v -o bin/docker -ldflags "-X main.GITCOMMIT $GITCOMMIT -X main.VERSION $VERSION -w" ./docker || die
+	go test -a -i -v || die
+	go build -v -o bin/docker -ldflags "-X main.GITCOMMIT $GITCOMMIT -X main.VERSION $VERSION -d -w" ./docker || die
 }
 
 src_install() {
