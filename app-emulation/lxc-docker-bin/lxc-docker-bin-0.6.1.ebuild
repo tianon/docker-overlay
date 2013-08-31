@@ -34,7 +34,7 @@ ERROR_AUFS_FS="AUFS_FS is required to be set if and only if aufs-sources are use
 S="${WORKDIR}"
 
 pkg_setup() {
-	CONFIG_CHECK+=" ~NETFILTER_XT_MATCH_ADDRTYPE ~NF_NAT ~NF_NAT_NEEDED ~AUFS_FS ~BRIDGE"
+	CONFIG_CHECK+=" ~AUFS_FS ~BRIDGE ~NETFILTER_XT_MATCH_ADDRTYPE ~NF_NAT ~NF_NAT_NEEDED"
 	check_extra_config
 }
 
