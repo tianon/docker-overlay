@@ -69,6 +69,8 @@ pkg_postinst() {
 	elog "To use docker, the docker daemon must be running as root. To automatically"
 	elog "start the docker daemon at boot, add docker to the default runlevel:"
 	elog "  rc-update add docker default"
+	elog "Similarly for systemd:"
+	elog "  systemctl enable docker.service"
 	elog ""
 
 	# create docker group if the code checking for it in /etc/group exists
