@@ -60,8 +60,8 @@ src_install() {
 	systemd_dounit "${FILESDIR}/docker.service"
 
 	insinto /usr/share/${P}/contrib
-	doins contrib/README contrib/mkimage-*
-	cp -R "${S}/contrib"/vagrant-docker "${D}/usr/share/${P}/contrib/"
+	doins contrib/README
+	cp -R "${S}/contrib"/* "${D}/usr/share/${P}/contrib/"
 }
 
 pkg_postinst() {

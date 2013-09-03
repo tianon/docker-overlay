@@ -77,8 +77,8 @@ src_install() {
 	systemd_dounit "${FILESDIR}/docker.service"
 
 	insinto /usr/share/${P}/contrib
-	doins contrib/{README,MAINTAINERS} contrib/mkimage-*
-	cp -R "${S}/contrib"/{vagrant-docker,docker-brew} "${D}/usr/share/${P}/contrib/"
+	doins contrib/README
+	cp -R "${S}/contrib"/* "${D}/usr/share/${P}/contrib/"
 
 	newbashcomp contrib/docker.bash docker
 }
