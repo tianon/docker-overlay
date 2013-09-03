@@ -8,6 +8,10 @@ DOCKER_PIDFILE=${DOCKER_PIDFILE:-/run/${SVCNAME}.pid}
 DOCKER_BINARY=${DOCKER_BINARY:-/usr/bin/docker}
 
 start() {
+	touch "$DOCKER_LOGFILE"
+	chown root:docker "$DOCKER_LOGFILE"
+	chmod 0644 "$DOCKER_LOGFILE"
+
 	ebegin "Starting docker daemon"
 	start-stop-daemon --start --background \
 		--exec "$DOCKER_BINARY" \
