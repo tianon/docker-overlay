@@ -74,6 +74,10 @@ src_compile() {
 	if use doc; then
 		emake -C docs docs || die
 	fi
+
+	if use vim-syntax; then
+		git clone https://github.com/honza/dockerfile.vim.git "${WORKDIR}/dockerfile.vim" || die
+	fi
 }
 
 src_install() {
@@ -95,10 +99,9 @@ src_install() {
 	fi
 
 	if use vim-syntax; then
-		git clone https://github.com/honza/dockerfile.vim.git contrib/dockerfile.vim || die
 		insinto /usr/share/vim/vimfiles
-		doins -r contrib/dockerfile.vim/ftdetect
-		doins -r contrib/dockerfile.vim/syntax
+		doins -r "${WORKDIR}/dockerfile.vim/ftdetect"
+		doins -r "${WORKDIR}/dockerfile.vim/syntax"
 	fi
 }
 
