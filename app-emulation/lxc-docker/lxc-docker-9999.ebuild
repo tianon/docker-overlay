@@ -20,12 +20,16 @@ inherit bash-completion-r1 git-2 linux-info systemd user
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="vim-syntax"
+IUSE="doc vim-syntax"
 
 DEPEND="
 	>=dev-lang/go-1.1
 	dev-vcs/git
 	dev-vcs/mercurial
+	doc? (
+		dev-python/sphinx
+		dev-python/sphinxcontrib-httpdomain
+	)
 "
 RDEPEND="
 	!app-emulation/lxc-docker-bin
@@ -66,6 +70,10 @@ src_compile() {
 	test -n "$(git status --porcelain)" && GITCOMMIT="$GITCOMMIT-dirty"
 	mkdir -p bin || die
 	go build -a -v -o bin/docker -ldflags "-X main.GITCOMMIT $GITCOMMIT -X main.VERSION $VERSION -d -w" ./docker || die
+
+	if use doc; then
+		emake -C docs docs || die
+	fi
 }
 
 src_install() {
@@ -81,6 +89,10 @@ src_install() {
 	cp -R "${S}/contrib"/* "${D}/usr/share/${P}/contrib/"
 
 	newbashcomp contrib/docker.bash docker
+
+	if use doc; then
+		dohtml -r docs/_build/html/*
+	fi
 
 	if use vim-syntax; then
 		git clone https://github.com/honza/dockerfile.vim.git contrib/dockerfile.vim || die
