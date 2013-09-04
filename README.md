@@ -4,7 +4,9 @@ See [the docker homepage](http://docker.io) and [the docker repository](https://
 
 # using this overlay
 
-Add `https://raw.github.com/tianon/docker-overlay/master/repositories.xml` to overlays section in /etc/layman/layman.cfg (as per instructions on the [Gentoo Wiki](http://wiki.gentoo.org/wiki/Layman#Adding_custom_overlays)), then invoke the following:
+Be sure to check out http://docs.docker.io/en/latest/installation/gentoolinux/ for more notes and instructions regarding this overlay and ebuilds.
+
+Add `https://raw.github.com/tianon/docker-overlay/master/repositories.xml` to the `overlays` section in `/etc/layman/layman.cfg` (as per instructions on the [Gentoo Wiki](http://wiki.gentoo.org/wiki/Layman#Adding_custom_overlays)), then invoke the following:
 
 	layman -f -a docker
 
