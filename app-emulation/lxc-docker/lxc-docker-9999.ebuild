@@ -20,7 +20,7 @@ inherit bash-completion-r1 git-2 linux-info systemd user
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE=""
+IUSE="vim-syntax"
 
 DEPEND="
 	>=dev-lang/go-1.1
@@ -81,6 +81,13 @@ src_install() {
 	cp -R "${S}/contrib"/* "${D}/usr/share/${P}/contrib/"
 
 	newbashcomp contrib/docker.bash docker
+
+	if use vim-syntax; then
+		git clone https://github.com/honza/dockerfile.vim.git contrib/dockerfile.vim || die
+		insinto /usr/share/vim/vimfiles
+		doins -r contrib/dockerfile.vim/ftdetect
+		doins -r contrib/dockerfile.vim/syntax
+	fi
 }
 
 pkg_postinst() {
