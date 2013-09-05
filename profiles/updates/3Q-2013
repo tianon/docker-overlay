@@ -1,0 +1,2 @@
+move app-emulation/lxc-docker app-emulation/docker
+move app-emulation/lxc-docker-bin app-emulation/docker-bin
