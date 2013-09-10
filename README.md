@@ -12,4 +12,4 @@ Add `https://raw.github.com/tianon/docker-overlay/master/repositories.xml` to th
 
 After performing those steps, the following should work (or any other package from this overlay):
 
-	sudo emerge -av app-emulation/docker
+	emerge -av app-emulation/docker
