@@ -46,6 +46,7 @@ RDEPEND="
 
 RESTRICT="strip"
 
+# TODO AUFS will be replaced with device-mapper (sys-fs/lvm2) in 0.7
 ERROR_AUFS_FS="AUFS_FS is required to be set if and only if aufs-sources are used"
 
 pkg_setup() {
