@@ -54,29 +54,40 @@ pkg_setup() {
 }
 
 src_compile() {
-	# they be stealing our Makefile!
+	export CGO_ENABLED=0 # we need static linking!
 
-	# commands stolen from Dockerfile (go get)
-	mkdir -p .gopath/src/github.com/dotcloud || die
-	ln -sf "$(pwd -P)" .gopath/src/github.com/dotcloud/docker || die
+	export GOPATH="${WORKDIR}/gopath"
+	mkdir -p "$GOPATH" || die
+
+	# copy GOROOT so we can build it without cgo and not modify anything in the REAL_GOROOT
+	REAL_GOROOT="$(go env GOROOT)"
+	export GOROOT="${WORKDIR}/goroot"
+	rm -rf "$GOROOT" || die
+	cp -R "$REAL_GOROOT" "$GOROOT" || die
+
+	# static link GOROOT (especially net package)
+	go install -a -v std || die
+
+	# this gnarly block is going away with 0.7: https://github.com/dotcloud/docker/pull/1874
+	mkdir -p "${GOPATH}/src/github.com/dotcloud" || die
+	ln -sf "$(pwd -P)" "${GOPATH}/src/github.com/dotcloud/docker" || die
 	# the official revisions of the docker dependencies are in the Dockerfile directly, so we'll just do some lovely sed magic to snag those
 	grep $'run\tPKG=' Dockerfile \
-		| sed -r 's!^run\t([^;]+);\s*(git|hg).*(git\s+checkout\s+-f|hg\s+checkout).*$!(\1; \2 clone -q https://$PKG .gopath/src/$PKG \&\& cd .gopath/src/$PKG \&\& \3 -q $REV) || die!' \
+		| sed -r 's!^run\t([^;]+);\s*(git|hg).*(git\s+checkout\s+-f|hg\s+checkout).*$!(\1; \2 clone -q https://$PKG "${GOPATH}/src/$PKG" \&\& cd "${GOPATH}/src/$PKG" \&\& \3 -q $REV) || die!' \
 		| sh -x || die
 
-	# commands stolen from hack/release/make.sh (go build)
-	export GOPATH="$(pwd -P)/.gopath"
-	export CGO_ENABLED=0 # we need static linking!
+	# this gnarly block is going away with 0.7: https://github.com/dotcloud/docker/pull/1847
 	VERSION=$(cat ./VERSION)
 	GITCOMMIT=$(git rev-parse --short HEAD)
 	test -n "$(git status --porcelain)" && GITCOMMIT="$GITCOMMIT-dirty"
 	mkdir -p bin || die
-	go build -a -v -o bin/docker -ldflags "-X main.GITCOMMIT $GITCOMMIT -X main.VERSION $VERSION -d -w" ./docker || die
+	go build -v -o bin/docker -ldflags "-X main.GITCOMMIT $GITCOMMIT -X main.VERSION $VERSION -d -w" ./docker || die
 
 	if use doc; then
 		emake -C docs docs || die
 	fi
 
+	# TODO we need to prefetch this git history way before this point so that --fetchonly works properly
 	if use vim-syntax; then
 		git clone https://github.com/honza/dockerfile.vim.git "${WORKDIR}/dockerfile.vim" || die
 	fi
