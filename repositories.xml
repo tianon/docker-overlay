@@ -4,6 +4,7 @@
 		<description lang="en">Overlay for docker by dotCloud</description>
 		<homepage>https://github.com/tianon/docker-overlay</homepage>
 		<owner type="person">
+			<email>admwiggin@gmail.com</email>
 			<name>Tianon Gravi</name>
 		</owner>
 		<source type="git">git://github.com/tianon/docker-overlay.git</source>
