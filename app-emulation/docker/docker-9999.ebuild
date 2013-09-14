@@ -60,8 +60,8 @@ src_unpack() {
 	git-2_src_unpack
 
 	if use vim-syntax; then
-		EGIT_PROJECT="honza-dockerfile.vim"
 		EGIT_SOURCEDIR="${DOCKERFILE_VIM_S}"
+		EGIT_PROJECT="honza-dockerfile.vim.git"
 		EGIT_REPO_URI="https://github.com/honza/dockerfile.vim.git"
 		EGIT_MASTER="master"
 		EGIT_BRANCH="${EGIT_MASTER}"
