@@ -66,23 +66,23 @@ src_compile() {
 	rm -rf "$GOROOT" || die
 	cp -R "$REAL_GOROOT" "$GOROOT" || die
 
-	# static link GOROOT (especially net package)
+	# recompile GOROOT to be cgo-less and thus static-able (especially net package)
 	go install -a -v std || die
 
-	# this gnarly block is going away with 0.7: https://github.com/dotcloud/docker/pull/1874
+	# make sure docker itself is in our shiny new GOPATH
 	mkdir -p "${GOPATH}/src/github.com/dotcloud" || die
 	ln -sf "$(pwd -P)" "${GOPATH}/src/github.com/dotcloud/docker" || die
-	# the official revisions of the docker dependencies are in the Dockerfile directly, so we'll just do some lovely sed magic to snag those
-	grep $'run\tPKG=' Dockerfile \
-		| sed -r 's!^run\t([^;]+);\s*(git|hg).*(git\s+checkout\s+-f|hg\s+checkout).*$!(\1; \2 clone -q https://$PKG "${GOPATH}/src/$PKG" \&\& cd "${GOPATH}/src/$PKG" \&\& \3 -q $REV) || die!' \
-		| sh -x || die
 
-	# this gnarly block is going away with 0.7: https://github.com/dotcloud/docker/pull/1847
-	VERSION=$(cat ./VERSION)
-	GITCOMMIT=$(git rev-parse --short HEAD)
-	test -n "$(git status --porcelain)" && GITCOMMIT="$GITCOMMIT-dirty"
+	# we need our vendored deps, too
+	export GOPATH="$GOPATH:$(pwd -P)/vendor"
+
+	# time to build!
+	./hack/make.sh binary || die
+
+	# now copy the binary to a consistent location that doesn't involve the current version number
 	mkdir -p bin || die
-	go build -v -o bin/docker -ldflags "-X main.GITCOMMIT $GITCOMMIT -X main.VERSION $VERSION -d -w" ./docker || die
+	VERSION=$(cat ./VERSION)
+	cp -v bundles/$VERSION/binary/docker-$VERSION bin/docker || die
 
 	if use doc; then
 		emake -C docs docs || die
