@@ -46,12 +46,29 @@ RDEPEND="
 
 RESTRICT="strip"
 
+DOCKERFILE_VIM_S="${WORKDIR}/dockerfile.vim"
+
 # TODO AUFS will be replaced with device-mapper (sys-fs/lvm2) in 0.7
 ERROR_AUFS_FS="AUFS_FS is required to be set if and only if aufs-sources are used"
 
 pkg_setup() {
 	CONFIG_CHECK+=" ~AUFS_FS ~BRIDGE ~NETFILTER_XT_MATCH_ADDRTYPE ~NF_NAT ~NF_NAT_NEEDED"
 	check_extra_config
+}
+
+src_unpack() {
+	git-2_src_unpack
+
+	if use vim-syntax; then
+		EGIT_PROJECT="honza-dockerfile.vim"
+		EGIT_SOURCEDIR="${DOCKERFILE_VIM_S}"
+		EGIT_REPO_URI="https://github.com/honza/dockerfile.vim.git"
+		EGIT_MASTER="master"
+		EGIT_BRANCH="${EGIT_MASTER}"
+		EGIT_COMMIT="${EGIT_BRANCH}"
+		EGIT_NOUNPACK="true"
+		git-2_src_unpack
+	fi
 }
 
 src_compile() {
@@ -87,11 +104,6 @@ src_compile() {
 	if use doc; then
 		emake -C docs docs || die
 	fi
-
-	# TODO we need to prefetch this git history way before this point so that --fetchonly works properly
-	if use vim-syntax; then
-		git clone https://github.com/honza/dockerfile.vim.git "${WORKDIR}/dockerfile.vim" || die
-	fi
 }
 
 src_install() {
@@ -114,8 +126,8 @@ src_install() {
 
 	if use vim-syntax; then
 		insinto /usr/share/vim/vimfiles
-		doins -r "${WORKDIR}/dockerfile.vim/ftdetect"
-		doins -r "${WORKDIR}/dockerfile.vim/syntax"
+		doins -r "${DOCKERFILE_VIM_S}/ftdetect"
+		doins -r "${DOCKERFILE_VIM_S}/syntax"
 	fi
 }
 
