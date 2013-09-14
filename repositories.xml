@@ -1,11 +1,11 @@
 <repositories version="1.0">
 	<repo quality="experimental" status="unofficial">
-		<name>docker</name>
-		<description lang="en">Overlay for docker by dotCloud</description>
+		<name><![CDATA[docker]]></name>
+		<description lang="en"><![CDATA[Overlay for docker by dotCloud]]></description>
 		<homepage>https://github.com/tianon/docker-overlay</homepage>
 		<owner type="person">
 			<email>admwiggin@gmail.com</email>
-			<name>Tianon Gravi</name>
+			<name><![CDATA[Tianon Gravi]]></name>
 		</owner>
 		<source type="git">git://github.com/tianon/docker-overlay.git</source>
 		<source type="git">https://github.com/tianon/docker-overlay.git</source>
