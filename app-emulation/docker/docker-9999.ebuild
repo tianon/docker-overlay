@@ -60,14 +60,16 @@ src_unpack() {
 	git-2_src_unpack
 
 	if use vim-syntax; then
-		local EGIT_SOURCEDIR="${DOCKERFILE_VIM_S}"
-		local EGIT_PROJECT="honza-dockerfile.vim.git"
-		local EGIT_REPO_URI="https://github.com/honza/dockerfile.vim.git"
-		local EGIT_MASTER="master"
-		local EGIT_BRANCH="${EGIT_MASTER}"
-		local EGIT_COMMIT="${EGIT_BRANCH}"
-		local EGIT_NOUNPACK="true"
-		git-2_src_unpack
+		( # subshell to prevent environment leakage (and confusion of smart-live-rebuild)
+			EGIT_SOURCEDIR="${DOCKERFILE_VIM_S}"
+			EGIT_PROJECT="honza-dockerfile.vim.git"
+			EGIT_REPO_URI="https://github.com/honza/dockerfile.vim.git"
+			EGIT_MASTER="master"
+			EGIT_BRANCH="${EGIT_MASTER}"
+			EGIT_COMMIT="${EGIT_BRANCH}"
+			EGIT_NOUNPACK="true"
+			git-2_src_unpack
+		)
 	fi
 }
 
