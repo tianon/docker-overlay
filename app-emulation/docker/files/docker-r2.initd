@@ -26,9 +26,17 @@ start() {
 	if [ "$DOCKER_WORKAROUND_1422" ] && [ "$DOCKER_WORKAROUND_1422" -gt 0 ]; then
 		# see https://github.com/dotcloud/docker/issues/1422
 		ewarn "Working around gh#1422 (via busybox image); this may take a moment"
+
+		# we were calling "docker run" more quickly than "docker -d" could get
+		#  fired up, so our workaround wasn't successful without a short delay
 		sleep $DOCKER_WORKAROUND_1422_DELAY
-		docker run -i -t busybox true &> /dev/null || true # first run will fail
+
+		# TODO when we get https://github.com/dotcloud/docker/pull/1589, these
+		#  both need -rm so we clean up after ourselves (thanks, @eliasp!)
+		docker run -i -t busybox true &> /dev/null || true
+		# first run will fail, so we ignore its output and result and run again
 		docker run -i -t busybox true
+
 		ewend $?
 	fi
 }
