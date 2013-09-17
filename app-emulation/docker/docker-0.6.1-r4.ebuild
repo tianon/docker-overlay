@@ -48,7 +48,6 @@ RESTRICT="strip"
 
 DOCKERFILE_VIM_S="${WORKDIR}/dockerfile.vim"
 
-# TODO AUFS will be replaced with device-mapper (sys-fs/lvm2) in 0.7
 ERROR_AUFS_FS="AUFS_FS is required to be set if and only if aufs-sources are used"
 
 pkg_setup() {
@@ -74,34 +73,24 @@ src_unpack() {
 }
 
 src_compile() {
+	# they be stealing our Makefile!
+
+	# commands stolen from Dockerfile (go get)
+	mkdir -p .gopath/src/github.com/dotcloud || die
+	ln -sf "$(pwd -P)" .gopath/src/github.com/dotcloud/docker || die
+	# the official revisions of the docker dependencies are in the Dockerfile directly, so we'll just do some lovely sed magic to snag those
+	grep $'run\tPKG=' Dockerfile \
+		| sed -r 's!^run\t([^;]+);\s*(git|hg).*(git\s+checkout\s+-f|hg\s+checkout).*$!(\1; \2 clone -q https://$PKG .gopath/src/$PKG \&\& cd .gopath/src/$PKG \&\& \3 -q $REV) || die!' \
+		| sh -x || die
+
+	# commands stolen from hack/release/make.sh (go build)
+	export GOPATH="$(pwd -P)/.gopath"
 	export CGO_ENABLED=0 # we need static linking!
-
-	export GOPATH="${WORKDIR}/gopath"
-	mkdir -p "$GOPATH" || die
-
-	# copy GOROOT so we can build it without cgo and not modify anything in the REAL_GOROOT
-	REAL_GOROOT="$(go env GOROOT)"
-	export GOROOT="${WORKDIR}/goroot"
-	rm -rf "$GOROOT" || die
-	cp -R "$REAL_GOROOT" "$GOROOT" || die
-
-	# recompile GOROOT to be cgo-less and thus static-able (especially net package)
-	go install -a -v std || die
-
-	# make sure docker itself is in our shiny new GOPATH
-	mkdir -p "${GOPATH}/src/github.com/dotcloud" || die
-	ln -sf "$(pwd -P)" "${GOPATH}/src/github.com/dotcloud/docker" || die
-
-	# we need our vendored deps, too
-	export GOPATH="$GOPATH:$(pwd -P)/vendor"
-
-	# time to build!
-	./hack/make.sh binary || die
-
-	# now copy the binary to a consistent location that doesn't involve the current version number
-	mkdir -p bin || die
 	VERSION=$(cat ./VERSION)
-	cp -v bundles/$VERSION/binary/docker-$VERSION bin/docker || die
+	GITCOMMIT=$(git rev-parse --short HEAD)
+	test -n "$(git status --porcelain)" && GITCOMMIT="$GITCOMMIT-dirty"
+	mkdir -p bin || die
+	go build -a -v -o bin/docker -ldflags "-X main.GITCOMMIT $GITCOMMIT -X main.VERSION $VERSION -d -w" ./docker || die
 
 	if use doc; then
 		emake -C docs docs || die
