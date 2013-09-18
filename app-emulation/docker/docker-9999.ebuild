@@ -51,8 +51,10 @@ DOCKERFILE_VIM_S="${WORKDIR}/dockerfile.vim"
 # TODO AUFS will be replaced with device-mapper (sys-fs/lvm2) in 0.7
 ERROR_AUFS_FS="AUFS_FS is required to be set if and only if aufs-sources are used"
 
+ERROR_MEMCG_SWAP="MEMCG_SWAP is required if you wish to limit swap usage of containers"
+
 pkg_setup() {
-	CONFIG_CHECK+=" ~AUFS_FS ~BRIDGE ~NETFILTER_XT_MATCH_ADDRTYPE ~NF_NAT ~NF_NAT_NEEDED"
+	CONFIG_CHECK+=" ~AUFS_FS ~BRIDGE ~MEMCG_SWAP ~NETFILTER_XT_MATCH_ADDRTYPE ~NF_NAT ~NF_NAT_NEEDED"
 	check_extra_config
 }
 
