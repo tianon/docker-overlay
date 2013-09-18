@@ -22,8 +22,12 @@ start() {
 		--stderr "$DOCKER_LOGFILE" \
 		-- -d -p "$DOCKER_PIDFILE"
 	eend $?
+	ret=$?
 
-	if [ "$DOCKER_WORKAROUND_1422" ] && [ "$DOCKER_WORKAROUND_1422" -gt 0 ]; then
+	if [ $ret -eq 0 ] \
+		&& [ "$DOCKER_WORKAROUND_1422" ] \
+		&& [ "$DOCKER_WORKAROUND_1422" -gt 0 ] \
+	; then
 		# see https://github.com/dotcloud/docker/issues/1422
 		ewarn "Working around gh#1422 (via busybox image); this may take a moment"
 
@@ -39,6 +43,8 @@ start() {
 
 		ewend $?
 	fi
+
+	return $ret
 }
 
 stop() {
