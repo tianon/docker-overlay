@@ -11,10 +11,10 @@ In a nutshell:
 
 Check out [the Gentoo Linux installation instructions at docker.io](http://docs.docker.io/en/latest/installation/gentoolinux/) for important notes and direction regarding this overlay and the ebuilds contained within.
 
-Add `https://raw.github.com/tianon/docker-overlay/master/repositories.xml` to the `overlays` section in `/etc/layman/layman.cfg` (as per instructions on the [Gentoo Wiki](http://wiki.gentoo.org/wiki/Layman#Adding_custom_overlays)), then invoke the following:
+This repository is currently listed with layman.  Ensure that you have layman (`emerge -av app-portage/layman`), and invoke the following:
 
-	layman -f -a docker
+	layman -a docker
 
-After performing those steps, `app-emulation/docker` should be available for emerge (or alternatively, `app-emulation/docker-bin`):
+After adding this overlay, `app-emulation/docker` should be available for emerge (or alternatively, `app-emulation/docker-bin`):
 
 	emerge -av app-emulation/docker
