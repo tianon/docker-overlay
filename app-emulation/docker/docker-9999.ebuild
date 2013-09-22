@@ -106,7 +106,7 @@ src_compile() {
 	cp -v bundles/$VERSION/binary/docker-$VERSION bin/docker || die
 
 	if use doc; then
-		emake -C docs docs || die
+		emake -C docs docs man || die
 	fi
 }
 
@@ -127,6 +127,7 @@ src_install() {
 
 	if use doc; then
 		dohtml -r docs/_build/html/*
+		doman docs/_build/man/*
 	fi
 
 	if use vim-syntax; then
