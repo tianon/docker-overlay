@@ -7,11 +7,17 @@ See [the docker homepage](http://docker.io) and [the docker repository](https://
 In a nutshell:
 > Docker is an open-source project to easily create lightweight, portable, self-sufficient containers from any application.
 
+## using docker in gentoo
+
+Latest stable is in the portage tree proper.  If you just want the latest release version of docker, that's the best place to find it.
+
+Be sure to check out [the Gentoo Linux installation instructions at docker.io](http://docs.docker.io/en/latest/installation/gentoolinux/) for important notes and direction regarding the Gentoo ebulids for Docker.
+
 ## using this overlay
 
-Check out [the Gentoo Linux installation instructions at docker.io](http://docs.docker.io/en/latest/installation/gentoolinux/) for important notes and direction regarding this overlay and the ebuilds contained within.
+If you want a `-bin` ebuild, the latest and greatest changes before they're pushed to tree, or a live ebuild, you're in the correct place.
 
-This repository is currently listed with layman.  Ensure that you have layman (`emerge -av app-portage/layman`), and invoke the following:
+This repository is listed with layman.  Ensure that you have layman (`emerge -av app-portage/layman`), and invoke the following:
 
 	layman -a docker
 
