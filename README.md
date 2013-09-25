@@ -2,14 +2,14 @@
 
 ## what is docker?
 
-See [the docker homepage](http://docker.io) and [the docker repository](https://github.com/dotcloud/docker) for more information about docker.
+See [the Docker homepage](http://docker.io) and [the Docker repository](https://github.com/dotcloud/docker) for more information about Docker.
 
 In a nutshell:
 > Docker is an open-source project to easily create lightweight, portable, self-sufficient containers from any application.
 
 ## using docker in gentoo
 
-Latest stable is in the portage tree proper.  If you just want the latest release version of docker, that's the best place to find it.
+Latest stable is in the portage tree proper under the name `app-emulation/docker`.  If you just want the latest release version of Docker, that's the best place to find it.
 
 Be sure to check out [the Gentoo Linux installation instructions at docker.io](http://docs.docker.io/en/latest/installation/gentoolinux/) for important notes and direction regarding the Gentoo ebulids for Docker.
 
