@@ -10,9 +10,7 @@ DOCKER_WORKAROUND_1422=${DOCKER_WORKAROUND_1422:-0}
 DOCKER_WORKAROUND_1422_DELAY=${DOCKER_WORKAROUND_1422_DELAY:-1}
 
 start() {
-	touch "$DOCKER_LOGFILE"
-	chown root:docker "$DOCKER_LOGFILE"
-	chmod 0644 "$DOCKER_LOGFILE"
+	checkpath -f -m 0644 -o root:docker "$DOCKER_LOGFILE"
 
 	ebegin "Starting docker daemon"
 	start-stop-daemon --start --background \
