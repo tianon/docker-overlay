@@ -115,7 +115,7 @@ src_install() {
 	dodoc AUTHORS CONTRIBUTING.md CHANGELOG.md MAINTAINERS NOTICE README.md
 
 	newinitd "${FILESDIR}/docker-r3.initd" docker
-	newconfd "${FILESDIR}/docker-r2.confd" docker
+	newconfd "${FILESDIR}/docker-r3.confd" docker
 
 	systemd_dounit "${FILESDIR}/docker.service"
 

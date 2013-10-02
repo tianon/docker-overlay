@@ -6,8 +6,6 @@
 DOCKER_LOGFILE=${DOCKER_LOGFILE:-/var/log/${SVCNAME}.log}
 DOCKER_PIDFILE=${DOCKER_PIDFILE:-/run/${SVCNAME}.pid}
 DOCKER_BINARY=${DOCKER_BINARY:-/usr/bin/docker}
-DOCKER_WORKAROUND_1422=${DOCKER_WORKAROUND_1422:-0}
-DOCKER_WORKAROUND_1422_DELAY=${DOCKER_WORKAROUND_1422_DELAY:-1}
 
 start() {
 	checkpath -f -m 0644 -o root:docker "$DOCKER_LOGFILE"
@@ -20,27 +18,6 @@ start() {
 		--stderr "$DOCKER_LOGFILE" \
 		-- -d -p "$DOCKER_PIDFILE"
 	eend $?
-	ret=$?
-
-	if [ $ret -eq 0 ] \
-		&& [ "$DOCKER_WORKAROUND_1422" ] \
-		&& [ "$DOCKER_WORKAROUND_1422" -gt 0 ] \
-	; then
-		# see https://github.com/dotcloud/docker/issues/1422
-		ewarn "Working around gh#1422 (via busybox image); this may take a moment"
-
-		# we were calling "docker run" more quickly than "docker -d" could get
-		#  fired up, so our workaround wasn't successful without a short delay
-		sleep $DOCKER_WORKAROUND_1422_DELAY
-
-		docker run -rm -i -t busybox true &> /dev/null || true
-		# first run will fail, so we ignore its output and result and run again
-		docker run -rm -i -t busybox true
-
-		ewend $?
-	fi
-
-	return $ret
 }
 
 stop() {
