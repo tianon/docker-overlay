@@ -33,12 +33,12 @@ DEPEND="
 "
 RDEPEND="
 	!app-emulation/lxc-docker-bin
-	>=app-arch/xz-utils-4.9
 	>=app-arch/tar-1.26
 	>=sys-apps/iproute2-3.5
 	>=net-firewall/iptables-1.4
 	>=app-emulation/lxc-0.8
 	>=dev-vcs/git-1.7
+	>=app-arch/xz-utils-4.9
 	|| (
 		sys-fs/aufs3
 		sys-kernel/aufs-sources
