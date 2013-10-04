@@ -38,6 +38,7 @@ RDEPEND="
 	>=net-firewall/iptables-1.4
 	>=app-emulation/lxc-0.8
 	>=dev-vcs/git-1.7
+	>=app-arch/xz-utils-4.9
 	|| (
 		sys-fs/aufs3
 		sys-kernel/aufs-sources
