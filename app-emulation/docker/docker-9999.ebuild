@@ -47,8 +47,6 @@ RDEPEND="
 
 RESTRICT="strip"
 
-DOCKERFILE_VIM_S="${WORKDIR}/dockerfile.vim"
-
 # TODO AUFS will be replaced with device-mapper (sys-fs/lvm2[static-libs]) in 0.7
 ERROR_AUFS_FS="AUFS_FS is required to be set if and only if aufs-sources are used"
 
@@ -61,19 +59,6 @@ pkg_setup() {
 
 src_unpack() {
 	git-2_src_unpack
-
-	if use vim-syntax; then
-		( # subshell to prevent environment leakage (and confusion of smart-live-rebuild)
-			EGIT_SOURCEDIR="${DOCKERFILE_VIM_S}"
-			EGIT_PROJECT="honza-dockerfile.vim.git"
-			EGIT_REPO_URI="https://github.com/honza/dockerfile.vim.git"
-			EGIT_MASTER="master"
-			EGIT_BRANCH="${EGIT_MASTER}"
-			EGIT_COMMIT="${EGIT_BRANCH}"
-			EGIT_NOUNPACK="true"
-			git-2_src_unpack
-		)
-	fi
 }
 
 src_compile() {
@@ -124,17 +109,20 @@ src_install() {
 	doins contrib/README
 	cp -R "${S}/contrib"/* "${D}/usr/share/${P}/contrib/"
 
-	newbashcomp contrib/docker.bash docker
-
 	if use doc; then
 		dohtml -r docs/_build/html/*
 		doman docs/_build/man/*
 	fi
 
+	dobashcomp contrib/completion/bash/*
+
+	insinto /usr/share/zsh/site-functions
+	doins contrib/completion/zsh/*
+
 	if use vim-syntax; then
 		insinto /usr/share/vim/vimfiles
-		doins -r "${DOCKERFILE_VIM_S}/ftdetect"
-		doins -r "${DOCKERFILE_VIM_S}/syntax"
+		doins -r contrib/vim-syntax/ftdetect
+		doins -r contrib/vim-syntax/syntax
 	fi
 }
 
