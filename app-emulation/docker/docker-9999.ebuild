@@ -47,8 +47,9 @@ RDEPEND="
 
 RESTRICT="strip"
 
-# TODO AUFS will be replaced with device-mapper (sys-fs/lvm2[static-libs]) in 0.7
+# TODO AUFS will be replaced with device-mapper (may require sys-fs/lvm2[static-libs]) in 0.7
 ERROR_AUFS_FS="AUFS_FS is required to be set if and only if aufs-sources are used"
+# TODO 0.7 may also require dev-db/sqlite[static-libs]
 
 ERROR_MEMCG_SWAP="MEMCG_SWAP is required if you wish to limit swap usage of containers"
 
