@@ -89,7 +89,7 @@ src_compile() {
 	./hack/make.sh dynbinary || die
 
 	if use doc; then
-		emake -C docs docs || die
+		emake -C docs docs man || die
 	fi
 }
 
@@ -107,6 +107,7 @@ src_install() {
 	dodoc AUTHORS CONTRIBUTING.md CHANGELOG.md NOTICE README.md
 	if use doc; then
 		dohtml -r docs/_build/html/*
+		doman docs/_build/man/*
 	fi
 
 	dobashcomp contrib/completion/bash/*
