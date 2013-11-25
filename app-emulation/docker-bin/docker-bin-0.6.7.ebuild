@@ -17,7 +17,7 @@ IUSE=""
 
 DEPEND=""
 RDEPEND="
-	!app-emulation/lxc-docker
+	!app-emulation/docker
 	>=app-arch/tar-1.26
 	>=sys-apps/iproute2-3.5
 	>=net-firewall/iptables-1.4

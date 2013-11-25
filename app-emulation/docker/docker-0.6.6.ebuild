@@ -37,7 +37,7 @@ DEPEND="
 "
 RDEPEND="
 	${CDEPEND}
-	!app-emulation/lxc-docker-bin
+	!app-emulation/docker-bin
 	>=app-arch/tar-1.26
 	>=sys-apps/iproute2-3.5
 	>=net-firewall/iptables-1.4

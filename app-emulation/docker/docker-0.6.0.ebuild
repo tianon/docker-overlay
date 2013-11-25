@@ -28,7 +28,7 @@ DEPEND="
 	dev-vcs/mercurial
 "
 RDEPEND="
-	!app-emulation/lxc-docker-bin
+	!app-emulation/docker-bin
 	app-emulation/lxc
 	net-firewall/iptables
 	sys-apps/iproute2
