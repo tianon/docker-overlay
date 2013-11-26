@@ -6,44 +6,18 @@ EAPI=5
 
 DESCRIPTION="Docker complements LXC with a high-level API which operates at the process level."
 HOMEPAGE="http://www.docker.io/"
-SRC_URI=""
+SRC_URI="https://get.docker.io/ubuntu/pool/main/l/lxc-docker-${PV}/lxc-docker-${PV}_${PV}_amd64.deb"
+KEYWORDS="-* ~amd64"
 
-EGIT_REPO_URI="git://github.com/dotcloud/docker.git"
-if [[ ${PV} == *9999 ]]; then
-	KEYWORDS=""
-elif [[ ${PV} == *_rc* ]]; then
-	EGIT_COMMIT="v${PV/_/-}"
-	KEYWORDS=""
-else
-	EGIT_COMMIT="v${PV}"
-	KEYWORDS="~amd64"
-fi
-
-inherit bash-completion-r1 git-2 linux-info systemd user
+inherit unpacker linux-info systemd
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="aufs +device-mapper doc vim-syntax"
+IUSE="aufs +device-mapper"
 
-CDEPEND="
-	>=dev-db/sqlite-3.7.9:3
-	device-mapper? (
-		sys-fs/lvm2[thin]
-	)
-"
-DEPEND="
-	${CDEPEND}
-	>=dev-lang/go-1.1.2
-	dev-vcs/git
-	dev-vcs/mercurial
-	doc? (
-		dev-python/sphinx
-		dev-python/sphinxcontrib-httpdomain
-	)
-"
+DEPEND=""
 RDEPEND="
-	${CDEPEND}
-	!app-emulation/docker-bin
+	!app-emulation/docker
 	>=app-arch/tar-1.26
 	>=sys-apps/iproute2-3.5
 	>=net-firewall/iptables-1.4
@@ -56,9 +30,14 @@ RDEPEND="
 			sys-kernel/aufs-sources
 		)
 	)
+	device-mapper? (
+		sys-fs/lvm2[thin]
+	)
 "
 
 RESTRICT="strip"
+
+S="${WORKDIR}"
 
 pkg_setup() {
 	CONFIG_CHECK+="
@@ -88,60 +67,13 @@ pkg_setup() {
 	check_extra_config
 }
 
-src_unpack() {
-	git-2_src_unpack
-}
-
-src_compile() {
-	export GOPATH="${WORKDIR}/gopath"
-	mkdir -p "$GOPATH" || die
-
-	# make sure docker itself is in our shiny new GOPATH
-	mkdir -p "${GOPATH}/src/github.com/dotcloud" || die
-	ln -sf "$(pwd -P)" "${GOPATH}/src/github.com/dotcloud/docker" || die
-
-	# we need our vendored deps, too
-	export GOPATH="$GOPATH:$(pwd -P)/vendor"
-
-	# time to build!
-	./hack/make.sh dynbinary || die
-
-	if use doc; then
-		emake -C docs docs man || die
-	fi
-}
-
 src_install() {
-	VERSION=$(cat VERSION)
-	newbin bundles/$VERSION/dynbinary/docker-$VERSION docker
-	exeinto /usr/libexec/docker
-	newexe bundles/$VERSION/dynbinary/dockerinit-$VERSION dockerinit
+	dobin usr/bin/docker
 
-	newinitd contrib/init/openrc/docker.initd docker
-	newconfd contrib/init/openrc/docker.confd docker
+	newinitd "${FILESDIR}/docker-r3.initd" docker
+	newconfd "${FILESDIR}/docker-r3.confd" docker
 
-	systemd_dounit contrib/init/systemd/docker.service
-
-	dodoc AUTHORS CONTRIBUTING.md CHANGELOG.md NOTICE README.md
-	if use doc; then
-		dohtml -r docs/_build/html/*
-		doman docs/_build/man/*
-	fi
-
-	dobashcomp contrib/completion/bash/*
-
-	insinto /usr/share/zsh/site-functions
-	doins contrib/completion/zsh/*
-
-	if use vim-syntax; then
-		insinto /usr/share/vim/vimfiles
-		doins -r contrib/vim-syntax/ftdetect
-		doins -r contrib/vim-syntax/syntax
-	fi
-
-	insinto /usr/share/${P}/contrib
-	doins contrib/README
-	cp -R "${S}/contrib"/* "${D}/usr/share/${P}/contrib/"
+	systemd_dounit "${FILESDIR}/docker.service"
 }
 
 pkg_postinst() {
