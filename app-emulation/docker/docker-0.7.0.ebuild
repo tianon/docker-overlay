@@ -100,6 +100,10 @@ src_compile() {
 	# we need our vendored deps, too
 	export GOPATH="$GOPATH:$(pwd -P)/vendor"
 
+	# Gentoo doesn't set this up right yet
+	export CGO_CFLAGS="-I${ROOT}/usr/include"
+	export CGO_LDFLAGS="-L${ROOT}/usr/lib"
+
 	# time to build!
 	./hack/make.sh dynbinary || die
 
