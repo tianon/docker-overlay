@@ -16,7 +16,7 @@ if [[ ${PV} == *9999 ]]; then
 	KEYWORDS=""
 else
 	SRC_URI="https://${GITHUB_URI}/archive/v${PV}.zip -> ${P}.zip"
-	DOCKER_GITCOMMIT=""
+	DOCKER_GITCOMMIT="88df052"
 	KEYWORDS="~amd64"
 	[ "$DOCKER_GITCOMMIT" ] || die "DOCKER_GITCOMMIT must be added manually for each bump!"
 fi
@@ -64,7 +64,6 @@ RESTRICT="strip"
 pkg_setup() {
 	CONFIG_CHECK+="
 		~BRIDGE
-		~IP_NF_TARGET_MASQUERADE
 		~MEMCG_SWAP
 		~NETFILTER_XT_MATCH_ADDRTYPE
 		~NF_NAT
