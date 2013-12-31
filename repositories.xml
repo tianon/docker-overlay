@@ -1,7 +1,7 @@
 <repositories version="1.0">
 	<repo quality="experimental" status="unofficial">
 		<name><![CDATA[docker]]></name>
-		<description lang="en"><![CDATA[Overlay for docker by dotCloud]]></description>
+		<description lang="en"><![CDATA[Overlay for Docker]]></description>
 		<homepage>https://github.com/tianon/docker-overlay</homepage>
 		<owner type="person">
 			<email>admwiggin@gmail.com</email>
