@@ -145,8 +145,8 @@ src_install() {
 
 	if use vim-syntax; then
 		insinto /usr/share/vim/vimfiles
-		doins -r contrib/vim-syntax/ftdetect
-		doins -r contrib/vim-syntax/syntax
+		doins -r contrib/syntax/vim/ftdetect
+		doins -r contrib/syntax/vim/syntax
 	fi
 
 	insinto /usr/share/${P}/contrib
