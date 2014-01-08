@@ -25,7 +25,7 @@ inherit bash-completion-r1 linux-info systemd udev user
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="aufs +device-mapper doc vim-syntax"
+IUSE="aufs +device-mapper doc vim-syntax zsh-completion"
 
 # TODO work with upstream to allow us to build without lvm2 installed if we have -device-mapper
 CDEPEND="
@@ -140,8 +140,10 @@ src_install() {
 
 	dobashcomp contrib/completion/bash/*
 
-	insinto /usr/share/zsh/site-functions
-	doins contrib/completion/zsh/*
+	if use zsh-completion; then
+		insinto /usr/share/zsh/site-functions
+		doins contrib/completion/zsh/*
+	fi
 
 	if use vim-syntax; then
 		insinto /usr/share/vim/vimfiles
