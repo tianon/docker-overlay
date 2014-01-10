@@ -97,8 +97,8 @@ src_compile() {
 	mkdir -p "$GOPATH" || die
 
 	# make sure docker itself is in our shiny new GOPATH
-	mkdir -p "${GOPATH}/src/github.com/dotcloud" || die
-	ln -sf "$(pwd -P)" "${GOPATH}/src/github.com/dotcloud/docker" || die
+	mkdir -p "${GOPATH}/src/$(dirname "$GITHUB_URI")" || die
+	ln -sf "$(pwd -P)" "${GOPATH}/src/${GITHUB_URI}" || die
 
 	# we need our vendored deps, too
 	export GOPATH="$GOPATH:$(pwd -P)/vendor"
