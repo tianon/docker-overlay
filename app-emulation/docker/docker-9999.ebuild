@@ -173,13 +173,4 @@ pkg_postinst() {
 
 	elog "To use docker as a non-root user, add yourself to the docker group."
 	elog ""
-
-	ewarn ""
-	ewarn "If you want your containers to have access to the public internet or even"
-	ewarn "the existing private network, IP Forwarding must be enabled:"
-	ewarn "  sysctl -w net.ipv4.ip_forward=1"
-	ewarn "or more permanently:"
-	ewarn "  echo net.ipv4.ip_forward = 1 > /etc/sysctl.d/${PN}.conf"
-	ewarn "Please be mindful of the security implications of enabling IP Forwarding."
-	ewarn ""
 }
