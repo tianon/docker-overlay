@@ -112,6 +112,11 @@ src_compile() {
 	# if we're building from a zip, we need the GITCOMMIT value
 	[ "$DOCKER_GITCOMMIT" ] && export DOCKER_GITCOMMIT
 
+	if gcc-specs-pie; then
+		sed -i 's/export LDFLAGS_STATIC="/export LDFLAGS_STATIC="-extldflags=-fno-PIC /' hack/make/dynbinary || die
+		grep -q '-extldflags=-fno-PIC' hack/make/dynbinary || die 'sed failed'
+	fi
+
 	# time to build!
 	./hack/make.sh dynbinary || die
 
