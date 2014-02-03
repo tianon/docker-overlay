@@ -25,7 +25,7 @@ inherit bash-completion-r1 linux-info systemd udev user
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="aufs +device-mapper doc vim-syntax zsh-completion"
+IUSE="aufs btrfs +device-mapper doc vim-syntax zsh-completion"
 
 # TODO work with upstream to allow us to build without lvm2 installed if we have -device-mapper
 CDEPEND="
@@ -35,6 +35,7 @@ CDEPEND="
 DEPEND="
 	${CDEPEND}
 	>=dev-lang/go-1.2
+	sys-fs/btrfs-progs
 	dev-vcs/git
 	dev-vcs/mercurial
 	doc? (
@@ -78,6 +79,12 @@ pkg_setup() {
 			~AUFS_FS
 		"
 		ERROR_AUFS_FS="AUFS_FS is required to be set if and only if aufs-sources are used"
+	fi
+
+	if use btrfs; then
+		CONFIG_CHECK+="
+			~BTRFS_FS
+		"
 	fi
 
 	if use device-mapper; then
