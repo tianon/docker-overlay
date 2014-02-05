@@ -17,6 +17,10 @@
 			Enables dependencies for the "aufs" driver, including necessary
 			kernel flags.
 		</flag>
+		<flag name="btrfs">
+			Enables dependencies for the experimental "btrfs" driver,
+			including necessary kernel flags.
+		</flag>
 		<flag name="device-mapper">
 			Enables dependencies for the "device-mapper" driver, including
 			necessary kernel flags.
