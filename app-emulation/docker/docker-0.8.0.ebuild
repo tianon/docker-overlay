@@ -35,7 +35,7 @@ CDEPEND="
 DEPEND="
 	${CDEPEND}
 	>=dev-lang/go-1.2
-	sys-fs/btrfs-progs
+	>=sys-fs/btrfs-progs-0.20
 	dev-vcs/git
 	dev-vcs/mercurial
 	doc? (
