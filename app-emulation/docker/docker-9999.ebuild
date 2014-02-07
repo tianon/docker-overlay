@@ -71,13 +71,13 @@ pkg_setup() {
 		~NF_NAT
 		~NF_NAT_NEEDED
 	"
-	ERROR_MEMCG_SWAP="MEMCG_SWAP is required if you wish to limit swap usage of containers"
+	ERROR_MEMCG_SWAP="CONFIG_MEMCG_SWAP: is required if you wish to limit swap usage of containers"
 
 	if use aufs; then
 		CONFIG_CHECK+="
 			~AUFS_FS
 		"
-		ERROR_AUFS_FS="AUFS_FS is required to be set if and only if aufs-sources are used"
+		ERROR_AUFS_FS="CONFIG_AUFS_FS: is required to be set if and only if aufs-sources are used"
 	fi
 
 	if use btrfs; then
