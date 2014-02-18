@@ -98,17 +98,9 @@ pkg_setup() {
 }
 
 src_compile() {
-	# eventually, perhaps Gentoo will include a "go" eclass to do some of this
-
-	export GOPATH="${WORKDIR}/gopath"
-	mkdir -p "$GOPATH" || die
-
-	# make sure docker itself is in our shiny new GOPATH
-	mkdir -p "${GOPATH}/src/$(dirname "$GITHUB_URI")" || die
-	ln -sf "$(pwd -P)" "${GOPATH}/src/${GITHUB_URI}" || die
-
-	# we need our vendored deps, too
-	export GOPATH="$GOPATH:$(pwd -P)/vendor"
+	# if we treat them right, Docker's build scripts will set up a
+	# reasonable GOAPTH for us
+	export AUTO_GOPATH=1
 
 	# setup CFLAGS and LDFLAGS for separate build target
 	# see https://github.com/tianon/docker-overlay/pull/10
