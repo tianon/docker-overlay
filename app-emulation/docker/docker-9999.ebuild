@@ -4,8 +4,8 @@
 
 EAPI=5
 
-DESCRIPTION="Docker complements LXC with a high-level API which operates at the process level."
-HOMEPAGE="http://www.docker.io/"
+DESCRIPTION="Docker complements kernel namespacing with a high-level API which operates at the process level."
+HOMEPAGE="https://www.docker.io/"
 
 GITHUB_URI="github.com/dotcloud/docker"
 
@@ -25,7 +25,7 @@ inherit bash-completion-r1 linux-info systemd udev user
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="aufs btrfs +device-mapper doc vim-syntax zsh-completion"
+IUSE="aufs btrfs +device-mapper doc lxc vim-syntax zsh-completion"
 
 # TODO work with upstream to allow us to build without lvm2 installed if we have -device-mapper
 CDEPEND="
@@ -48,7 +48,9 @@ RDEPEND="
 	!app-emulation/docker-bin
 	>=sys-apps/iproute2-3.5
 	>=net-firewall/iptables-1.4
-	>=app-emulation/lxc-0.8
+	lxc? (
+		>=app-emulation/lxc-0.8
+	)
 	>=dev-vcs/git-1.7
 	>=app-arch/xz-utils-4.9
 	aufs? (
@@ -62,16 +64,48 @@ RDEPEND="
 RESTRICT="strip"
 
 pkg_setup() {
+	# many of these were borrowed from the app-emulation/lxc ebuild
 	CONFIG_CHECK+="
+		~CGROUPS
+		~CGROUP_CPUACCT
+		~CGROUP_DEVICE
+		~CGROUP_SCHED
+		~CPUSETS
+		~MEMCG_SWAP
+		~RESOURCE_COUNTERS
+
+		~NAMESPACES
+		~IPC_NS
+		~PID_NS
+
+		~DEVPTS_MULTIPLE_INSTANCES
+		~MACVLAN
+		~NET_NS
+		~UTS_NS
+		~VETH
+
+		~POSIX_MQUEUE
+		~!NETPRIO_CGROUP
+
 		~BRIDGE
 		~IP_NF_TARGET_MASQUERADE
-		~MEMCG_SWAP
 		~NETFILTER_XT_MATCH_ADDRTYPE
 		~NETFILTER_XT_MATCH_CONNTRACK
 		~NF_NAT
 		~NF_NAT_NEEDED
+
+		~!GRKERNSEC_CHROOT_MOUNT
+		~!GRKERNSEC_CHROOT_DOUBLE
+		~!GRKERNSEC_CHROOT_PIVOT
+		~!GRKERNSEC_CHROOT_CHMOD
+		~!GRKERNSEC_CHROOT_CAPS
 	"
+
 	ERROR_MEMCG_SWAP="CONFIG_MEMCG_SWAP: is required if you wish to limit swap usage of containers"
+
+	for c in GRKERNSEC_CHROOT_MOUNT GRKERNSEC_CHROOT_DOUBLE GRKERNSEC_CHROOT_PIVOT GRKERNSEC_CHROOT_CHMOD; do
+		declare "ERROR_$c"="CONFIG_$c: see app-emulation/lxc postinst notes for why some GRSEC features make containers unusuable"
+	done
 
 	if use aufs; then
 		CONFIG_CHECK+="
