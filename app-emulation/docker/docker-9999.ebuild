@@ -46,7 +46,6 @@ DEPEND="
 RDEPEND="
 	${CDEPEND}
 	!app-emulation/docker-bin
-	>=sys-apps/iproute2-3.5
 	>=net-firewall/iptables-1.4
 	lxc? (
 		>=app-emulation/lxc-0.8
