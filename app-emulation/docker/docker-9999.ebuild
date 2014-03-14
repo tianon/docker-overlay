@@ -144,8 +144,8 @@ src_compile() {
 	[ "$DOCKER_GITCOMMIT" ] && export DOCKER_GITCOMMIT
 
 	if gcc-specs-pie; then
-		sed -i 's/export LDFLAGS_STATIC="/export LDFLAGS_STATIC="-extldflags=-fno-PIC /' hack/make/dynbinary || die
-		grep -q '-extldflags=-fno-PIC' hack/make/dynbinary || die 'sed failed'
+		sed -i "s/EXTLDFLAGS_STATIC='/EXTLDFLAGS_STATIC='-fno-PIC /" hack/make.sh || die
+		grep -q -- '-fno-PIC' hack/make.sh || die 'hardened sed failed'
 	fi
 
 	# time to build!
