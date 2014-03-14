@@ -188,9 +188,9 @@ src_install() {
 		doins -r contrib/syntax/vim/syntax
 	fi
 
-	insinto /usr/share/${P}/contrib
+	insinto /usr/share/${PN}/contrib
 	doins contrib/README
-	cp -R "${S}/contrib"/* "${D}/usr/share/${P}/contrib/"
+	cp -R "${S}/contrib"/* "${D}/usr/share/${PN}/contrib/"
 }
 
 pkg_postinst() {
