@@ -30,12 +30,16 @@ IUSE="aufs btrfs +device-mapper doc lxc vim-syntax zsh-completion"
 # TODO work with upstream to allow us to build without lvm2 installed if we have -device-mapper
 CDEPEND="
 	>=dev-db/sqlite-3.7.9:3
-	sys-fs/lvm2[thin]
+	device-mapper? (
+		sys-fs/lvm2[thin]
+	)
 "
 DEPEND="
 	${CDEPEND}
 	>=dev-lang/go-1.2
-	>=sys-fs/btrfs-progs-0.20
+	btrfs? (
+		>=sys-fs/btrfs-progs-0.20
+	)
 	dev-vcs/git
 	dev-vcs/mercurial
 	doc? (
@@ -147,6 +151,14 @@ src_compile() {
 		sed -i "s/EXTLDFLAGS_STATIC='/EXTLDFLAGS_STATIC='-fno-PIC /" hack/make.sh || die
 		grep -q -- '-fno-PIC' hack/make.sh || die 'hardened sed failed'
 	fi
+
+	# let's set up some optional features :)
+	export DOCKER_BUILDTAGS=''
+	for gd in aufs btrfs device-mapper; do
+		if ! use $gd; then
+			DOCKER_BUILDTAGS+=" exclude_graphdriver_${gd//-/}"
+		fi
+	done
 
 	# time to build!
 	./hack/make.sh dynbinary || die
