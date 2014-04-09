@@ -187,8 +187,9 @@ src_install() {
 	dodoc AUTHORS CONTRIBUTING.md CHANGELOG.md NOTICE README.md
 	if use doc; then
 		dohtml -r docs/_build/html/*
-		doman docs/_build/man/*
+		doman docs/_build/man/Dockerfile.5
 	fi
+	doman contrib/man/man*/*
 
 	dobashcomp contrib/completion/bash/*
 
