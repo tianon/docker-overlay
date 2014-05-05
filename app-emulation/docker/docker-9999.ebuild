@@ -67,6 +67,12 @@ RDEPEND="
 RESTRICT="strip"
 
 pkg_setup() {
+	if kernel_is lt 3 8; then
+		ewarn ""
+		ewarn "Using Docker with kernels older than 3.8 is unstable and unsupported."
+		ewarn ""
+	fi
+
 	# many of these were borrowed from the app-emulation/lxc ebuild
 	CONFIG_CHECK+="
 		~CGROUPS
