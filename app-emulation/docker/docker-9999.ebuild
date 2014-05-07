@@ -25,7 +25,7 @@ inherit bash-completion-r1 linux-info systemd udev user
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="aufs btrfs +device-mapper doc lxc vim-syntax zsh-completion"
+IUSE="aufs btrfs +contrib +device-mapper doc lxc vim-syntax zsh-completion"
 
 # TODO work with upstream to allow us to build without lvm2 installed if we have -device-mapper
 CDEPEND="
@@ -43,10 +43,6 @@ DEPEND="
 	dev-vcs/git
 	dev-vcs/mercurial
 "
-#	doc? (
-#		dev-python/sphinx
-#		dev-python/sphinxcontrib-httpdomain
-#	)
 RDEPEND="
 	${CDEPEND}
 	!app-emulation/docker-bin
@@ -172,9 +168,7 @@ src_compile() {
 	# time to build!
 	./hack/make.sh dynbinary || die
 
-#	if use doc; then
-#		emake -C docs docs man || die
-#	fi
+	# TODO pandoc the man pages using contrib/man/md/md2man-all.sh
 }
 
 src_install() {
@@ -191,11 +185,13 @@ src_install() {
 	udev_dorules contrib/udev/*.rules
 
 	dodoc AUTHORS CONTRIBUTING.md CHANGELOG.md NOTICE README.md
-#	if use doc; then
-#		dohtml -r docs/_build/html/*
-#		doman docs/_build/man/Dockerfile.5
-#	fi
-#	doman contrib/man/man*/*
+	if use doc; then
+		# TODO doman contrib/man/man*/*
+
+		docompress -x /usr/share/doc/${PF}/md
+		docinto md
+		dodoc -r docs/sources/*
+	fi
 
 	dobashcomp contrib/completion/bash/*
 
@@ -210,9 +206,10 @@ src_install() {
 		doins -r contrib/syntax/vim/syntax
 	fi
 
-	insinto /usr/share/${PN}/contrib
-	doins contrib/README
-	cp -R "${S}/contrib"/* "${D}/usr/share/${PN}/contrib/"
+	if use contrib; then
+		insinto /usr/share/${PN}/contrib
+		doins -r contrib/*
+	fi
 }
 
 pkg_postinst() {
