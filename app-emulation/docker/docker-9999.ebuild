@@ -48,7 +48,7 @@ RDEPEND="
 	!app-emulation/docker-bin
 	>=net-firewall/iptables-1.4
 	lxc? (
-		>=app-emulation/lxc-0.8
+		>=app-emulation/lxc-1.0
 	)
 	>=dev-vcs/git-1.7
 	>=app-arch/xz-utils-4.9
