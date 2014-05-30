@@ -207,8 +207,8 @@ src_install() {
 	fi
 
 	if use contrib; then
-		insinto /usr/share/${PN}/contrib
-		doins -r contrib/*
+		mkdir -p "${D}/usr/share/${PN}/contrib"
+		cp -R contrib/* "${D}/usr/share/${PN}/contrib"
 	fi
 }
 
