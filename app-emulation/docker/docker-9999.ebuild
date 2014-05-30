@@ -60,7 +60,7 @@ RDEPEND="
 	)
 "
 
-RESTRICT="strip"
+RESTRICT="installsources strip"
 
 pkg_setup() {
 	if kernel_is lt 3 8; then
