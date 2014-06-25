@@ -27,7 +27,6 @@ LICENSE="Apache-2.0"
 SLOT="0"
 IUSE="aufs btrfs +contrib +device-mapper doc lxc vim-syntax zsh-completion"
 
-# TODO work with upstream to allow us to build without lvm2 installed if we have -device-mapper
 CDEPEND="
 	>=dev-db/sqlite-3.7.9:3
 	device-mapper? (
