@@ -169,7 +169,7 @@ src_compile() {
 	# time to build!
 	./hack/make.sh dynbinary || die
 
-	# TODO pandoc the man pages using contrib/man/md/md2man-all.sh
+	# TODO pandoc the man pages using docs/man/md2man-all.sh
 }
 
 src_install() {
