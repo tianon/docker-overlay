@@ -31,5 +31,8 @@
 		<flag name="lxc">
 			Enables dependencies for the "lxc" execution driver.
 		</flag>
+		<flag name="systemd-socket-activation">
+			Install systemd units enabled for socket activation.
+		</flag>
 	</use>
 </pkgmetadata>

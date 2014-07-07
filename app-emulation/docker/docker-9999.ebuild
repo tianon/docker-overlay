@@ -25,7 +25,7 @@ inherit bash-completion-r1 linux-info systemd udev user
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="aufs btrfs +contrib +device-mapper doc lxc vim-syntax zsh-completion"
+IUSE="aufs btrfs +contrib +device-mapper doc lxc systemd-socket-activation vim-syntax zsh-completion"
 
 CDEPEND="
 	>=dev-db/sqlite-3.7.9:3
@@ -180,7 +180,11 @@ src_install() {
 	newinitd contrib/init/openrc/docker.initd docker
 	newconfd contrib/init/openrc/docker.confd docker
 
-	systemd_dounit contrib/init/systemd/docker.service
+	if use systemd-socket-activation; then
+		systemd_dounit contrib/init/systemd/socket-activation/docker.{service,socket}
+	else
+		systemd_dounit contrib/init/systemd/docker.service
+	fi
 
 	udev_dorules contrib/udev/*.rules
 
