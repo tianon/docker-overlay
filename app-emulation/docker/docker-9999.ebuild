@@ -136,6 +136,13 @@ pkg_setup() {
 	check_extra_config
 }
 
+src_prepare() {
+	default
+
+	# allow user patches (use sparingly - upstream won't support them)
+	epatch_user
+}
+
 src_compile() {
 	# if we treat them right, Docker's build scripts will set up a
 	# reasonable GOPATH for us
