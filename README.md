@@ -24,3 +24,5 @@ This repository is listed with layman.  Ensure that you have layman (`emerge -av
 After adding this overlay, `app-emulation/docker` should be available for emerge (or alternatively, `app-emulation/docker-bin`):
 
 	emerge -av app-emulation/docker
+
+Note also the existence of `dev-util/gordon` (see https://github.com/docker/gordon for more details).
