@@ -13,7 +13,6 @@ if [[ ${PV} == *9999 ]]; then
 	SRC_URI=""
 	EGIT_REPO_URI="git://${GITHUB_URI}.git"
 	inherit git-2
-	KEYWORDS=""
 else
 	SRC_URI="https://${GITHUB_URI}/archive/v${PV}.zip -> ${P}.zip"
 	DOCKER_GITCOMMIT=""
