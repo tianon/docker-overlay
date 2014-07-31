@@ -8,6 +8,9 @@ DESCRIPTION="Cli application to manage github pull requests"
 HOMEPAGE="https://github.com/docker/gordon"
 SRC_URI=""
 
+export GOPATH="${T}/gopath"
+S="${GOPATH}/src/github.com/docker/gordon"
+
 EGIT_REPO_URI="git://github.com/docker/gordon"
 inherit git-2
 
@@ -22,18 +25,14 @@ RDEPEND="dev-vcs/git"
 src_unpack() {
 	git-2_src_unpack
 
-	cd "${S}"
-	export GOPATH="$(pwd -P)/.gopath"
-	mkdir -p "$GOPATH/src/github.com/docker"
-	ln -sf "$(pwd -P)" "$GOPATH/src/github.com/docker/gordon"
-	go get -d -v ./...
+	cd "${S}" || die
+	go get -d -v ./... || die
 }
 
 src_compile() {
-	export GOPATH="$(pwd -P)/.gopath"
-	go install -v github.com/docker/gordon/{pulls,issues}
+	go install -v ./... || die
 }
 
 src_install() {
-	dobin .gopath/bin/*
+	dobin "$GOPATH"/bin/*
 }
