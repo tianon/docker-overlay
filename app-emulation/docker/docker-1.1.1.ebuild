@@ -4,7 +4,7 @@
 
 EAPI=5
 
-DESCRIPTION="Docker complements kernel namespacing with a high-level API which operates at the process level."
+DESCRIPTION="Docker complements kernel namespacing with a high-level API which operates at the process level"
 HOMEPAGE="https://www.docker.io/"
 
 GITHUB_URI="github.com/dotcloud/docker"

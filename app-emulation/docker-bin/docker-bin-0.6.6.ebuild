@@ -4,7 +4,7 @@
 
 EAPI=5
 
-DESCRIPTION="Docker complements LXC with a high-level API which operates at the process level."
+DESCRIPTION="Docker complements LXC with a high-level API which operates at the process level"
 HOMEPAGE="http://www.docker.io/"
 SRC_URI="https://get.docker.io/ubuntu/pool/main/l/lxc-docker-${PV}/lxc-docker-${PV}_${PV}_amd64.deb"
 KEYWORDS="-* ~amd64"
