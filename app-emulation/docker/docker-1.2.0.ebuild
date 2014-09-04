@@ -116,6 +116,8 @@ pkg_setup() {
 		CONFIG_CHECK+="
 			~AUFS_FS
 		"
+		# TODO there must be a way to detect "sys-kernel/aufs-sources" so we don't warn "sys-fs/aufs3" users about this
+		# an even better solution would be to check if the current kernel sources include CONFIG_AUFS_FS as an option, but that sounds hairy and error-prone
 		ERROR_AUFS_FS="CONFIG_AUFS_FS: is required to be set if and only if aufs-sources are used"
 	fi
 
@@ -173,9 +175,9 @@ src_compile() {
 	done
 
 	# time to build!
-	./hack/make.sh dynbinary || die
+	./hack/make.sh dynbinary || die 'dynbinary failed'
 
-	# TODO pandoc the man pages using docs/man/md2man-all.sh
+	# TODO get go-md2man and then include the man pages using docs/man/md2man-all.sh
 }
 
 src_install() {
@@ -223,8 +225,8 @@ pkg_postinst() {
 	udev_reload
 
 	elog ""
-	elog "To use docker, the docker daemon must be running as root. To automatically"
-	elog "start the docker daemon at boot, add docker to the default runlevel:"
+	elog "To use Docker, the Docker daemon must be running as root. To automatically"
+	elog "start the Docker daemon at boot, add Docker to the default runlevel:"
 	elog "  rc-update add docker default"
 	elog "Similarly for systemd:"
 	elog "  systemctl enable docker.service"
@@ -233,6 +235,7 @@ pkg_postinst() {
 	# create docker group if the code checking for it in /etc/group exists
 	enewgroup docker
 
-	elog "To use docker as a non-root user, add yourself to the docker group."
+	elog "To use Docker as a non-root user, add yourself to the 'docker' group:"
+	elog "  usermod -aG docker youruser"
 	elog ""
 }
