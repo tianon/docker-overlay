@@ -5,9 +5,9 @@
 EAPI=5
 
 DESCRIPTION="Docker complements kernel namespacing with a high-level API which operates at the process level"
-HOMEPAGE="https://www.docker.io/"
+HOMEPAGE="https://www.docker.com"
 
-GITHUB_URI="github.com/dotcloud/docker"
+GITHUB_URI="github.com/docker/docker"
 
 if [[ ${PV} == *9999 ]]; then
 	SRC_URI=""
