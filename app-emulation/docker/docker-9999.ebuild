@@ -87,6 +87,21 @@ pkg_setup() {
 		die 'Kernel is too old - need 3.8 or above'
 	fi
 
+	# for where these kernel versions come from, see:
+	# https://www.google.com/search?q=945b2b2d259d1a4364a2799e80e8ff32f8c6ee6f+site%3Akernel.org%2Fpub%2Flinux%2Fkernel+file%3AChangeLog*
+	if ! {
+		kernel_is ge 3 16 \
+		|| { kernel_is 3 15 && kernel_is ge 3 15 5; } \
+		|| { kernel_is 3 14 && kernel_is ge 3 14 12; } \
+		|| { kernel_is 3 12 && kernel_is ge 3 12 25; }
+	}; then
+		ewarn ""
+		ewarn "There is a serious Docker-related kernel panic that has been fixed in 3.16+"
+		ewarn "  (and was backported to 3.15.5+, 3.14.12+, and 3.12.25+)"
+		ewarn ""
+		ewarn "See also https://github.com/docker/docker/issues/2960"
+	fi
+
 	if use aufs; then
 		CONFIG_CHECK+="
 			~AUFS_FS
