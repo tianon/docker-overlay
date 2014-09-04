@@ -133,7 +133,7 @@ pkg_setup() {
 		"
 	fi
 
-	check_extra_config
+	linux-info_pkg_setup
 }
 
 src_prepare() {
