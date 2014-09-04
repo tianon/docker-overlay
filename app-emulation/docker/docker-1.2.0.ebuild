@@ -60,6 +60,23 @@ RDEPEND="
 
 RESTRICT="installsources strip"
 
+# see "contrib/check-config.sh" from upstream's sources
+CONFIG_CHECK="
+	NAMESPACES NET_NS PID_NS IPC_NS UTS_NS
+	DEVPTS_MULTIPLE_INSTANCES
+	CGROUPS CGROUP_CPUACCT CGROUP_DEVICE CGROUP_FREEZER CGROUP_SCHED
+	MACVLAN VETH BRIDGE
+	NF_NAT_IPV4 IP_NF_TARGET_MASQUERADE
+	NETFILTER_XT_MATCH_ADDRTYPE NETFILTER_XT_MATCH_CONNTRACK
+	NF_NAT NF_NAT_NEEDED
+
+	~MEMCG_SWAP
+	~RESOURCE_COUNTERS
+	~CGROUP_PERF
+"
+
+ERROR_MEMCG_SWAP="CONFIG_MEMCG_SWAP: is required if you wish to limit swap usage of containers"
+
 pkg_setup() {
 	if kernel_is lt 3 8; then
 		eerror ""
@@ -67,50 +84,6 @@ pkg_setup() {
 		eerror " - http://docs.docker.com/installation/binaries/#check-kernel-dependencies"
 		die 'Kernel is too old - need 3.8 or above'
 	fi
-
-	# many of these were borrowed from the app-emulation/lxc ebuild
-	CONFIG_CHECK+="
-		~CGROUPS
-		~CGROUP_CPUACCT
-		~CGROUP_DEVICE
-		~CGROUP_FREEZER
-		~CGROUP_SCHED
-		~CPUSETS
-		~MEMCG_SWAP
-		~RESOURCE_COUNTERS
-
-		~IPC_NS
-		~NAMESPACES
-		~PID_NS
-
-		~DEVPTS_MULTIPLE_INSTANCES
-		~MACVLAN
-		~NET_NS
-		~UTS_NS
-		~VETH
-
-		~!NETPRIO_CGROUP
-		~POSIX_MQUEUE
-
-		~BRIDGE
-		~IP_NF_TARGET_MASQUERADE
-		~NETFILTER_XT_MATCH_ADDRTYPE
-		~NETFILTER_XT_MATCH_CONNTRACK
-		~NF_NAT
-		~NF_NAT_NEEDED
-
-		~!GRKERNSEC_CHROOT_CAPS
-		~!GRKERNSEC_CHROOT_CHMOD
-		~!GRKERNSEC_CHROOT_DOUBLE
-		~!GRKERNSEC_CHROOT_MOUNT
-		~!GRKERNSEC_CHROOT_PIVOT
-	"
-
-	ERROR_MEMCG_SWAP="CONFIG_MEMCG_SWAP: is required if you wish to limit swap usage of containers"
-
-	for c in GRKERNSEC_CHROOT_MOUNT GRKERNSEC_CHROOT_DOUBLE GRKERNSEC_CHROOT_PIVOT GRKERNSEC_CHROOT_CHMOD; do
-		declare "ERROR_$c"="CONFIG_$c: see app-emulation/lxc postinst notes for why some GRSEC features make containers unusuable"
-	done
 
 	if use aufs; then
 		CONFIG_CHECK+="
@@ -129,9 +102,7 @@ pkg_setup() {
 
 	if use device-mapper; then
 		CONFIG_CHECK+="
-			~BLK_DEV_DM
-			~DM_THIN_PROVISIONING
-			~EXT4_FS
+			~BLK_DEV_DM ~DM_THIN_PROVISIONING ~EXT4_FS
 		"
 	fi
 
