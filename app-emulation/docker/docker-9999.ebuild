@@ -127,8 +127,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	default
-
 	# allow user patches (use sparingly - upstream won't support them)
 	epatch_user
 }
