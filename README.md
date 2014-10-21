@@ -11,7 +11,7 @@ In a nutshell:
 
 Latest stable is in the portage tree proper under the name `app-emulation/docker`.  If you just want the latest release version of Docker, that's the best place to find it.
 
-Be sure to check out [the Gentoo Linux installation instructions at docker.io](http://docs.docker.io/en/latest/installation/gentoolinux/) for important notes and direction regarding the Gentoo ebulids for Docker.
+Be sure to check out [the Gentoo Linux installation instructions at docker.io](http://docs.docker.io/en/latest/installation/gentoolinux/) for important notes and direction regarding the Gentoo ebuilds for Docker.
 
 ## using this overlay
 
