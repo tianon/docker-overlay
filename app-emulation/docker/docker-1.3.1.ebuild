@@ -15,7 +15,7 @@ if [[ ${PV} == *9999 ]]; then
 	inherit git-2
 else
 	SRC_URI="https://${GITHUB_URI}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
-	DOCKER_GITCOMMIT=""
+	DOCKER_GITCOMMIT="4e9bbfa"
 	KEYWORDS="~amd64"
 	[ "$DOCKER_GITCOMMIT" ] || die "DOCKER_GITCOMMIT must be added manually for each bump!"
 fi
