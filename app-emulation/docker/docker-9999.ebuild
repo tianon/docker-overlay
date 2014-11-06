@@ -26,30 +26,36 @@ LICENSE="Apache-2.0"
 SLOT="0"
 IUSE="aufs btrfs +contrib +device-mapper doc lxc vim-syntax zsh-completion"
 
+# https://github.com/docker/docker/blob/master/hack/PACKAGERS.md#build-dependencies
 CDEPEND="
 	>=dev-db/sqlite-3.7.9:3
 	device-mapper? (
-		sys-fs/lvm2[thin]
+		>=sys-fs/lvm2-2.02.89[thin]
 	)
 "
+
 DEPEND="
 	${CDEPEND}
-	>=dev-lang/go-1.2
+	>=dev-lang/go-1.3
 	btrfs? (
 		>=sys-fs/btrfs-progs-0.20
 	)
-	dev-vcs/git
-	dev-vcs/mercurial
 "
+
+# https://github.com/docker/docker/blob/master/hack/PACKAGERS.md#runtime-dependencies
+# https://github.com/docker/docker/blob/master/hack/PACKAGERS.md#optional-dependencies
 RDEPEND="
 	${CDEPEND}
+	
 	!app-emulation/docker-bin
 	>=net-firewall/iptables-1.4
+	sys-process/procps
+	>=dev-vcs/git-1.7
+	>=app-arch/xz-utils-4.9
+	
 	lxc? (
 		>=app-emulation/lxc-1.0
 	)
-	>=dev-vcs/git-1.7
-	>=app-arch/xz-utils-4.9
 	aufs? (
 		|| (
 			sys-fs/aufs3
