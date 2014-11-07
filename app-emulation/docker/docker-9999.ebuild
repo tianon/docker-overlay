@@ -46,13 +46,13 @@ DEPEND="
 # https://github.com/docker/docker/blob/master/hack/PACKAGERS.md#optional-dependencies
 RDEPEND="
 	${CDEPEND}
-	
+
 	!app-emulation/docker-bin
 	>=net-firewall/iptables-1.4
 	sys-process/procps
 	>=dev-vcs/git-1.7
 	>=app-arch/xz-utils-4.9
-	
+
 	lxc? (
 		>=app-emulation/lxc-1.0
 	)
