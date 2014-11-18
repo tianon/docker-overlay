@@ -29,6 +29,10 @@ src_unpack() {
 	go get -d -v ./... || die
 }
 
+src_prepare() {
+	epatch_user
+}
+
 src_compile() {
 	go install -v ./... || die
 }
