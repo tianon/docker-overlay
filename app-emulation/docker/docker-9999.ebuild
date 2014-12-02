@@ -20,7 +20,7 @@ else
 	[ "$DOCKER_GITCOMMIT" ] || die "DOCKER_GITCOMMIT must be added manually for each bump!"
 fi
 
-inherit bash-completion-r1 linux-info systemd udev user
+inherit bash-completion-r1 linux-info multilib systemd udev user
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -145,7 +145,7 @@ src_compile() {
 	# setup CFLAGS and LDFLAGS for separate build target
 	# see https://github.com/tianon/docker-overlay/pull/10
 	export CGO_CFLAGS="-I${ROOT}/usr/include"
-	export CGO_LDFLAGS="-L${ROOT}/usr/lib"
+	export CGO_LDFLAGS="-L${ROOT}/usr/$(get_libdir)"
 
 	# if we're building from a zip, we need the GITCOMMIT value
 	[ "$DOCKER_GITCOMMIT" ] && export DOCKER_GITCOMMIT
