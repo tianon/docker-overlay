@@ -16,7 +16,7 @@ S="${GOPATH}/src/github.com/docker/swarm"
 EGIT_REPO_URI="git://github.com/docker/swarm"
 inherit git-2
 
-LICENSE="MIT"
+LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS=""
 IUSE=""

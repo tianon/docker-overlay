@@ -6,13 +6,16 @@ EAPI=5
 
 DESCRIPTION="Machine management for a container-centric world"
 HOMEPAGE="https://github.com/docker/machine"
-SRC_URI="https://github.com/docker/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI=""
 
 inherit eutils
 
+EGIT_REPO_URI="git://github.com/docker/${PN}.git"
+inherit git-2
+
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS=""
 IUSE=""
 
 DEPEND=">=dev-lang/go-1.3"
