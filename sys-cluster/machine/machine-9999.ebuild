@@ -30,11 +30,11 @@ src_compile() {
 	mkdir -pv "$GOPATH/src/github.com/docker" || die
 	ln -sv "${S}" "$GOPATH/src/github.com/docker/${PN}" || die
 	export GOPATH="$GOPATH:${S}/Godeps/_workspace"
-	go build -v -o "$PN" || die
+	go build -v -o "docker-$PN" || die
 }
 
 src_install() {
-	dobin "$PN"
+	dobin "docker-$PN"
 }
 
 pkg_postinst() {

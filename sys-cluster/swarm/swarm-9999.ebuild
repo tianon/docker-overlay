@@ -36,9 +36,9 @@ src_prepare() {
 }
 
 src_compile() {
-	go install -v ./... || die
+	go install -v . || die
 }
 
 src_install() {
-	dobin "$GOPATH"/bin/*
+	newbin "$GOPATH/bin/$PN" "docker-$PN"
 }
