@@ -36,19 +36,3 @@ src_compile() {
 src_install() {
 	dobin "docker-$PN"
 }
-
-pkg_postinst() {
-	ewarn ""
-	ewarn "Machine relies on Identity Authentication in Docker."
-	ewarn " - Proposal: https://github.com/docker/docker/issues/7667"
-	ewarn " - PR: https://github.com/docker/docker/pull/8265"
-	ewarn ""
-	ewarn "As this is not merged in Docker proper, you will not receive support while"
-	ewarn "using this patch (although feedback on the PR will be very welcome)."
-	ewarn ""
-	ewarn "It can be included in a build of Docker by downloading"
-	ewarn "https://github.com/docker/docker/pull/8265.patch and placing it at"
-	ewarn "/etc/portage/patches/app-emulation/docker/8265-identity-auth.patch followed by a"
-	ewarn "fresh emerge of app-emulation/docker."
-	ewarn ""
-}
