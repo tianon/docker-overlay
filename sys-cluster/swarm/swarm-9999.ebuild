@@ -12,6 +12,7 @@ inherit eutils
 
 export GOPATH="${T}/gopath"
 S="${GOPATH}/src/github.com/docker/swarm"
+export GOPATH="$GOPATH:${S}/Godeps/_workspace"
 
 EGIT_REPO_URI="git://github.com/docker/swarm"
 inherit git-2
@@ -24,21 +25,14 @@ IUSE=""
 DEPEND=">=dev-lang/go-1.2"
 RDEPEND="dev-vcs/git"
 
-src_unpack() {
-	git-2_src_unpack
-
-	cd "${S}" || die
-	go get -d -v ./... || die
-}
-
 src_prepare() {
 	epatch_user
 }
 
 src_compile() {
-	go install -v . || die
+	go build -v -o "docker-$PN" || die
 }
 
 src_install() {
-	newbin "$GOPATH/bin/$PN" "docker-$PN"
+	dobin "docker-$PN"
 }
