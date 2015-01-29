@@ -14,7 +14,10 @@ if [[ ${PV} == *9999 ]]; then
 	EGIT_REPO_URI="git://${GITHUB_URI}.git"
 	inherit git-2
 else
-	SRC_URI="https://${GITHUB_URI}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+	MY_PV="${PV/_/-}"
+	MY_P="${PN}-${MY_PV}"
+	SRC_URI="https://${GITHUB_URI}/archive/v${MY_PV}.tar.gz -> ${MY_P}.tar.gz"
+	S="${WORKDIR}/${MY_P}"
 	DOCKER_GITCOMMIT=""
 	KEYWORDS="~amd64"
 	[ "$DOCKER_GITCOMMIT" ] || die "DOCKER_GITCOMMIT must be added manually for each bump!"
