@@ -10,19 +10,21 @@ SRC_URI=""
 
 inherit eutils
 
-export GOPATH="${T}/gopath"
-S="${GOPATH}/src/github.com/docker/swarm"
-export GOPATH="$GOPATH:${S}/Godeps/_workspace"
-
-EGIT_REPO_URI="git://github.com/docker/swarm"
-inherit git-2
+if [[ ${PV} == *9999 ]]; then
+	SRC_URI=""
+	EGIT_REPO_URI="git://github.com/docker/${PN}.git"
+	inherit git-2
+else
+	SRC_URI="https://github.com/docker/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+	KEYWORDS="~amd64"
+fi
 
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-DEPEND=">=dev-lang/go-1.2"
+DEPEND=">=dev-lang/go-1.3"
 RDEPEND="dev-vcs/git"
 
 src_prepare() {
@@ -30,6 +32,10 @@ src_prepare() {
 }
 
 src_compile() {
+	export GOPATH="${T}/gopath"
+	mkdir -pv "$GOPATH/src/github.com/docker" || die
+	ln -sv "${S}" "$GOPATH/src/github.com/docker/${PN}" || die
+	export GOPATH="$GOPATH:${S}/Godeps/_workspace"
 	go build -v -o "docker-$PN" || die
 }
 
