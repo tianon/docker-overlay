@@ -15,7 +15,10 @@ if [[ ${PV} == *9999 ]]; then
 	EGIT_REPO_URI="git://github.com/docker/${PN}.git"
 	inherit git-2
 else
-	SRC_URI="https://github.com/docker/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+	MY_PV="${PV/_/-}"
+	MY_P="${PN}-${MY_PV}"
+	SRC_URI="https://github.com/docker/${PN}/archive/v${MY_PV}.tar.gz -> ${MY_P}.tar.gz"
+	S="${WORKDIR}/${MY_P}"
 	KEYWORDS="~amd64"
 fi
 
