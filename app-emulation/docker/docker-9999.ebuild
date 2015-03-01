@@ -27,7 +27,7 @@ inherit bash-completion-r1 linux-info multilib systemd udev user
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="aufs btrfs +contrib +device-mapper doc lxc vim-syntax zsh-completion"
+IUSE="aufs btrfs +contrib +device-mapper doc lxc overlay vim-syntax zsh-completion"
 
 # https://github.com/docker/docker/blob/master/hack/PACKAGERS.md#build-dependencies
 CDEPEND="
@@ -135,6 +135,12 @@ pkg_setup() {
 		"
 	fi
 
+	if use overlay; then
+		CONFIG_CHECK+="
+			~OVERLAY_FS ~EXT4_FS_SECURITY ~EXT4_FS_POSIX_ACL
+		"
+	fi
+
 	linux-info_pkg_setup
 }
 
@@ -166,7 +172,7 @@ src_compile() {
 
 	# let's set up some optional features :)
 	export DOCKER_BUILDTAGS=''
-	for gd in aufs btrfs device-mapper; do
+	for gd in aufs btrfs device-mapper overlay; do
 		if ! use $gd; then
 			DOCKER_BUILDTAGS+=" exclude_graphdriver_${gd//-/}"
 		fi
