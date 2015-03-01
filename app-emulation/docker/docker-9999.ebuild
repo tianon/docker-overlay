@@ -79,6 +79,8 @@ CONFIG_CHECK="
 	NETFILTER_XT_MATCH_ADDRTYPE NETFILTER_XT_MATCH_CONNTRACK
 	NF_NAT NF_NAT_NEEDED
 
+	POSIX_MQUEUE
+
 	~MEMCG_SWAP
 	~RESOURCE_COUNTERS
 	~CGROUP_PERF
@@ -114,6 +116,7 @@ pkg_setup() {
 	if use aufs; then
 		CONFIG_CHECK+="
 			~AUFS_FS
+			~EXT4_FS_POSIX_ACL ~EXT4_FS_SECURITY
 		"
 		# TODO there must be a way to detect "sys-kernel/aufs-sources" so we don't warn "sys-fs/aufs3" users about this
 		# an even better solution would be to check if the current kernel sources include CONFIG_AUFS_FS as an option, but that sounds hairy and error-prone
@@ -128,7 +131,7 @@ pkg_setup() {
 
 	if use device-mapper; then
 		CONFIG_CHECK+="
-			~BLK_DEV_DM ~DM_THIN_PROVISIONING ~EXT4_FS
+			~BLK_DEV_DM ~DM_THIN_PROVISIONING ~EXT4_FS ~EXT4_FS_POSIX_ACL ~EXT4_FS_SECURITY
 		"
 	fi
 
