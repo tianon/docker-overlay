@@ -4,12 +4,12 @@
 
 EAPI=5
 
-DESCRIPTION="Fast, isolated development environments using Docker"
-HOMEPAGE="http://www.fig.sh"
+DESCRIPTION="Compose is a tool for defining and running complex applications with Docker"
+HOMEPAGE="https://docs.docker.com/compose/"
 MY_PN="${PN%-bin}"
 MY_PV="${PV/_/-}"
 SRC_URI="
-	amd64? ( https://github.com/docker/fig/releases/download/${MY_PV}/${MY_PN}-Linux-x86_64 -> ${P}-Linux-x86_64 )
+	amd64? ( https://github.com/docker/compose/releases/download/${MY_PV}/${MY_PN}-Linux-x86_64 -> ${P}-Linux-x86_64 )
 "
 
 LICENSE="Apache-2.0"
