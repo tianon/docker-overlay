@@ -8,6 +8,7 @@
 		scale, in production, on VMs, bare metal, OpenStack clusters, public
 		clouds and more.
 	</longdescription>
+	<herd>proxy-maintainers</herd>
 	<maintainer status="active">
 		<email>admwiggin@gmail.com</email>
 		<name>Tianon</name>
@@ -18,11 +19,15 @@
 			necessary kernel flags.
 		</flag>
 		<flag name="btrfs">
-			Enables dependencies for the experimental "btrfs" driver,
-			including necessary kernel flags.
+			Enables dependencies for the "btrfs" graph driver, including
+			necessary kernel flags.
 		</flag>
 		<flag name="device-mapper">
 			Enables dependencies for the "devicemapper" graph driver, including
+			necessary kernel flags.
+		</flag>
+		<flag name="overlay">
+			Enables dependencies for the "overlay" graph driver, including
 			necessary kernel flags.
 		</flag>
 		<flag name="lxc">

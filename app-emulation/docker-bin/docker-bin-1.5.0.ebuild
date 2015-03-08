@@ -13,7 +13,7 @@ inherit unpacker linux-info systemd
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="aufs btrfs +device-mapper lxc"
+IUSE="aufs btrfs +device-mapper lxc overlay"
 
 DEPEND=""
 # https://github.com/docker/docker/blob/master/hack/PACKAGERS.md#runtime-dependencies
@@ -26,7 +26,7 @@ RDEPEND="
 	>=app-arch/xz-utils-4.9
 
 	lxc? (
-		>=app-emulation/lxc-1.0
+		>=app-emulation/lxc-1.0.7
 	)
 	aufs? (
 		|| (
@@ -49,6 +49,8 @@ CONFIG_CHECK="
 	NF_NAT_IPV4 IP_NF_FILTER IP_NF_TARGET_MASQUERADE
 	NETFILTER_XT_MATCH_ADDRTYPE NETFILTER_XT_MATCH_CONNTRACK
 	NF_NAT NF_NAT_NEEDED
+
+	POSIX_MQUEUE
 
 	~MEMCG_SWAP
 	~RESOURCE_COUNTERS
@@ -100,6 +102,12 @@ pkg_setup() {
 	if use device-mapper; then
 		CONFIG_CHECK+="
 			~BLK_DEV_DM ~DM_THIN_PROVISIONING ~EXT4_FS
+		"
+	fi
+
+	if use overlay; then
+		CONFIG_CHECK+="
+			~OVERLAY_FS ~EXT4_FS_SECURITY ~EXT4_FS_POSIX_ACL
 		"
 	fi
 
