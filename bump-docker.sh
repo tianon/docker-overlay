@@ -40,7 +40,7 @@ if [ ! -e app-emulation/docker/docker-$newVersion.ebuild ]; then
 	cp \
 		app-emulation/docker/docker-9999.ebuild \
 		app-emulation/docker/docker-$newVersion.ebuild
-	commit="$(git ls-remote https://github.com/docker/docker.git "refs/tags/v$newVersion" | cut -b -7)"
+	commit="$(git ls-remote https://github.com/docker/docker.git "refs/tags/v$newVersion^{}" | cut -b -7)"
 	sed -i 's/DOCKER_GITCOMMIT=""/DOCKER_GITCOMMIT="'$commit'"/' app-emulation/docker/docker-$newVersion.ebuild
 fi
 ebuild app-emulation/docker/docker-$newVersion.ebuild digest
