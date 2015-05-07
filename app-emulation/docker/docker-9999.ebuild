@@ -94,11 +94,11 @@ ERROR_CGROUP_PERF="CONFIG_CGROUP_PERF: is optional for container statistics gath
 ERROR_CFS_BANDWIDTH="CONFIG_CFS_BANDWIDTH: is optional for container statistics gathering"
 
 pkg_setup() {
-	if kernel_is lt 3 8; then
+	if kernel_is lt 3 10; then
 		eerror ""
-		eerror "Using Docker with kernels older than 3.8 is unstable and unsupported."
+		eerror "Using Docker with kernels older than 3.10 is unstable and unsupported."
 		eerror " - http://docs.docker.com/installation/binaries/#check-kernel-dependencies"
-		die 'Kernel is too old - need 3.8 or above'
+		die 'Kernel is too old - need 3.10 or above'
 	fi
 
 	# for where these kernel versions come from, see:
