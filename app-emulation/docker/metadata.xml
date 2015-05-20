@@ -36,5 +36,9 @@
 		<flag name="lxc">
 			Enables dependencies for the "lxc" execution driver.
 		</flag>
+		<flag name="experimental">
+			Enables features labelled by upstream to be of "experimental"
+			quality and not yet ready for general consumption.
+		</flag>
 	</use>
 </pkgmetadata>
