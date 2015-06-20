@@ -191,7 +191,7 @@ src_compile() {
 	# time to build!
 	./hack/make.sh dynbinary || die 'dynbinary failed'
 
-	# TODO get go-md2man and then include the man pages using docs/man/md2man-all.sh
+	# TODO get go-md2man and then include the man pages using man/md2man-all.sh
 }
 
 src_install() {
@@ -209,11 +209,11 @@ src_install() {
 
 	dodoc AUTHORS CONTRIBUTING.md CHANGELOG.md NOTICE README.md
 	if use doc; then
-		# TODO doman contrib/man/man*/*
+		# TODO doman man/man*/*
 
 		docompress -x /usr/share/doc/${PF}/md
 		docinto md
-		dodoc -r docs/sources/*
+		dodoc -r docs/*
 	fi
 
 	dobashcomp contrib/completion/bash/*
