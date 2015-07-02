@@ -40,5 +40,8 @@
 			Enable features labelled by upstream to be of "experimental"
 			quality and not yet ready for general consumption.
 		</flag>
+		<flag name="apparmor">
+			Enable AppArmor support.
+		</flag>
 	</use>
 </pkgmetadata>
