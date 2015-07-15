@@ -96,6 +96,9 @@ CONFIG_CHECK="
 
 ERROR_MEMCG_SWAP="CONFIG_MEMCG_SWAP: is required if you wish to limit swap usage of containers"
 ERROR_RESOURCE_COUNTERS="CONFIG_RESOURCE_COUNTERS: is optional for container statistics gathering"
+
+ERROR_BLK_CGROUP="CONFIG_CFS_BANDWIDTH: is optional for container statistics gathering"
+ERROR_IOSCHED_CFQ="CONFIG_CFS_BANDWIDTH: is optional for container statistics gathering"
 ERROR_CGROUP_PERF="CONFIG_CGROUP_PERF: is optional for container statistics gathering"
 ERROR_CFS_BANDWIDTH="CONFIG_CFS_BANDWIDTH: is optional for container statistics gathering"
 
