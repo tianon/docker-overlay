@@ -76,24 +76,26 @@ RESTRICT="installsources strip"
 
 # see "contrib/check-config.sh" from upstream's sources
 CONFIG_CHECK="
-	NAMESPACES NET_NS PID_NS IPC_NS UTS_NS
-	DEVPTS_MULTIPLE_INSTANCES
-	CGROUPS CGROUP_CPUACCT CGROUP_DEVICE CGROUP_FREEZER CGROUP_SCHED CPUSETS
-	MACVLAN VETH BRIDGE BRIDGE_NETFILTER
-	NF_NAT_IPV4 IP_NF_FILTER IP_NF_TARGET_MASQUERADE
-	NETFILTER_XT_MATCH_ADDRTYPE NETFILTER_XT_MATCH_CONNTRACK
-	NF_NAT NF_NAT_NEEDED
+	~NAMESPACES ~NET_NS ~PID_NS ~IPC_NS ~UTS_NS
+	~DEVPTS_MULTIPLE_INSTANCES
+	~CGROUPS ~CGROUP_CPUACCT ~CGROUP_DEVICE ~CGROUP_FREEZER ~CGROUP_SCHED ~CPUSETS ~MEMCG
+	~MACVLAN ~VETH ~BRIDGE ~BRIDGE_NETFILTER
+	~NF_NAT_IPV4 ~IP_NF_FILTER ~IP_NF_TARGET_MASQUERADE
+	~NETFILTER_XT_MATCH_ADDRTYPE ~NETFILTER_XT_MATCH_CONNTRACK
+	~NF_NAT ~NF_NAT_NEEDED
 
-	POSIX_MQUEUE
+	~POSIX_MQUEUE
 
-	~MEMCG_SWAP ~MEMCG_SWAP_ENABLED
+	~MEMCG_KMEM ~MEMCG_SWAP ~MEMCG_SWAP_ENABLED
 
-	~BLK_CGROUP
-	~IOSCHED_CFQ
+	~BLK_CGROUP ~IOSCHED_CFQ
 	~CGROUP_PERF
-	~CFS_BANDWIDTH
+	~CGROUP_HUGETLB
+	~NET_CLS_CGROUP ~NETPRIO_CGROUP
+	~CFS_BANDWIDTH ~FAIR_GROUP_SCHED ~RT_GROUP_SCHED
 "
 
+ERROR_MEMCG_KMEM="CONFIG_MEMCG_KMEM: is optional"
 ERROR_MEMCG_SWAP="CONFIG_MEMCG_SWAP: is required if you wish to limit swap usage of containers"
 ERROR_RESOURCE_COUNTERS="CONFIG_RESOURCE_COUNTERS: is optional for container statistics gathering"
 
@@ -104,10 +106,9 @@ ERROR_CFS_BANDWIDTH="CONFIG_CFS_BANDWIDTH: is optional for container statistics 
 
 pkg_setup() {
 	if kernel_is lt 3 10; then
-		eerror ""
-		eerror "Using Docker with kernels older than 3.10 is unstable and unsupported."
-		eerror " - http://docs.docker.com/installation/binaries/#check-kernel-dependencies"
-		die 'Kernel is too old - need 3.10 or above'
+		ewarn ""
+		ewarn "Using Docker with kernels older than 3.10 is unstable and unsupported."
+		ewarn " - http://docs.docker.com/installation/binaries/#check-kernel-dependencies"
 	fi
 
 	# for where these kernel versions come from, see:
