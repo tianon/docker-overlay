@@ -1,30 +1,24 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
+EGO_PN=github.com/docker/docker
 
-DESCRIPTION="Docker complements kernel namespacing with a high-level API which operates at the process level"
-HOMEPAGE="https://www.docker.com"
-
-GITHUB_URI="github.com/docker/docker"
-
-if [[ ${PV} == *9999 ]]; then
-	SRC_URI=""
-	EGIT_REPO_URI="git://${GITHUB_URI}.git"
-	inherit git-2
+if [[ ${PV} = *9999* ]]; then
+	inherit golang-vcs
 else
 	MY_PV="${PV/_/-}"
-	MY_P="${PN}-${MY_PV}"
-	SRC_URI="https://${GITHUB_URI}/archive/v${MY_PV}.tar.gz -> ${MY_P}.tar.gz"
-	S="${WORKDIR}/${MY_P}"
-	DOCKER_GITCOMMIT=""
+	DOCKER_GITCOMMIT=
+	EGIT_COMMIT=v${MY_PV}
+	SRC_URI="https://${EGO_PN}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64"
 	[ "$DOCKER_GITCOMMIT" ] || die "DOCKER_GITCOMMIT must be added manually for each bump!"
+	inherit golang-vcs-snapshot
 fi
-
 inherit bash-completion-r1 linux-info multilib systemd udev user
 
+DESCRIPTION="Docker complements kernel namespacing with a high-level API which operates at the process level"
 LICENSE="Apache-2.0"
 SLOT="0"
 IUSE="apparmor aufs btrfs +contrib +device-mapper doc experimental lxc overlay vim-syntax"
@@ -39,7 +33,6 @@ CDEPEND="
 
 DEPEND="
 	${CDEPEND}
-	>=dev-lang/go-1.4:=
 	btrfs? (
 		>=sys-fs/btrfs-progs-3.8
 	)
@@ -164,14 +157,14 @@ pkg_setup() {
 }
 
 src_prepare() {
+	cd src/${EGO_PN} || die
 	# allow user patches (use sparingly - upstream won't support them)
 	epatch_user
 }
 
 src_compile() {
-	# if we treat them right, Docker's build scripts will set up a
-	# reasonable GOPATH for us
-	export AUTO_GOPATH=1
+	cd src/${EGO_PN} || die
+	export GOPATH="${WORKDIR}/${P}:${PWD}/vendor:$(get_golibdir_gopath)"
 
 	# setup CFLAGS and LDFLAGS for separate build target
 	# see https://github.com/tianon/docker-overlay/pull/10
@@ -215,6 +208,7 @@ src_compile() {
 }
 
 src_install() {
+	cd src/${EGO_PN} || die
 	VERSION=$(cat VERSION)
 	newbin bundles/$VERSION/dynbinary/docker-$VERSION docker
 	exeinto /usr/libexec/docker
