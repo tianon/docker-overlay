@@ -83,7 +83,7 @@ CONFIG_CHECK="
 	~BLK_CGROUP ~IOSCHED_CFQ
 	~CGROUP_PERF
 	~CGROUP_HUGETLB
-	~NET_CLS_CGROUP ~NETPRIO_CGROUP
+	~NET_CLS_CGROUP
 	~CFS_BANDWIDTH ~FAIR_GROUP_SCHED ~RT_GROUP_SCHED
 "
 
@@ -121,6 +121,16 @@ pkg_setup() {
 	if kernel_is le 3 18; then
 		CONFIG_CHECK+="
 			~RESOURCE_COUNTERS
+		"
+	fi
+
+	if kernel_is le 3 13; then
+		CONFIG_CHECK+="
+			~NETPRIO_CGROUP
+		"
+	else
+		CONFIG_CHECK+="
+			~CGROUP_NET_PRIO
 		"
 	fi
 
