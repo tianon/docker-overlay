@@ -23,9 +23,10 @@ fi
 inherit bash-completion-r1 linux-info multilib systemd udev user
 
 DESCRIPTION="Docker complements kernel namespacing with a high-level API which operates at the process level"
+HOMEPAGE="https://dockerproject.org"
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="apparmor aufs btrfs +device-mapper doc experimental lxc overlay"
+IUSE="apparmor aufs btrfs +device-mapper experimental lxc overlay"
 
 # https://github.com/docker/docker/blob/master/hack/PACKAGERS.md#build-dependencies
 CDEPEND="
@@ -37,6 +38,8 @@ CDEPEND="
 
 DEPEND="
 	${CDEPEND}
+
+	dev-go/go-md2man
 
 	btrfs? (
 		>=sys-fs/btrfs-progs-3.8
@@ -160,6 +163,9 @@ pkg_setup() {
 	fi
 
 	linux-info_pkg_setup
+
+	# create docker group for the code checking for it in /etc/group
+	enewgroup docker
 }
 
 src_prepare() {
@@ -210,7 +216,8 @@ src_compile() {
 	# time to build!
 	./hack/make.sh dynbinary || die 'dynbinary failed'
 
-	# TODO get go-md2man and then include the man pages using man/md2man-all.sh
+	# build the man pages too
+	./man/md2man-all.sh || die "unable to generate man pages"
 }
 
 src_install() {
@@ -228,13 +235,8 @@ src_install() {
 	udev_dorules contrib/udev/*.rules
 
 	dodoc AUTHORS CONTRIBUTING.md CHANGELOG.md NOTICE README.md
-	if use doc; then
-		# TODO doman man/man*/*
-
-		docompress -x "/usr/share/doc/${PF}/md"
-		docinto md
-		dodoc -r docs/*
-	fi
+	dodoc -r docs/*
+	doman man/man*/*
 
 	dobashcomp contrib/completion/bash/*
 
@@ -245,25 +247,21 @@ src_install() {
 	doins -r contrib/syntax/vim/ftdetect
 	doins -r contrib/syntax/vim/syntax
 
-	mkdir -p "${D}/usr/share/${PN}/contrib"
-	cp -R contrib/* "${D}/usr/share/${PN}/contrib"
+	insinto "/usr/share/${PN}/contrib"
+	doins -r contrib/*
 }
 
 pkg_postinst() {
 	udev_reload
 
-	elog ""
+	elog
 	elog "To use Docker, the Docker daemon must be running as root. To automatically"
 	elog "start the Docker daemon at boot, add Docker to the default runlevel:"
 	elog "  rc-update add docker default"
 	elog "Similarly for systemd:"
 	elog "  systemctl enable docker.service"
-	elog ""
-
-	# create docker group if the code checking for it in /etc/group exists
-	enewgroup docker
-
+	elog
 	elog "To use Docker as a non-root user, add yourself to the 'docker' group:"
 	elog "  usermod -aG docker youruser"
-	elog ""
+	elog
 }
