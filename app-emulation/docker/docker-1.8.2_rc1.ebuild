@@ -247,8 +247,9 @@ src_install() {
 	doins -r contrib/syntax/vim/ftdetect
 	doins -r contrib/syntax/vim/syntax
 
-	insinto "/usr/share/${PN}/contrib"
-	doins -r contrib/*
+	# note: intentionally not using "doins" so that we preserve +x bits
+	mkdir -p "${D}/usr/share/${PN}/contrib"
+	cp -R contrib/* "${D}/usr/share/${PN}/contrib"
 }
 
 pkg_postinst() {
