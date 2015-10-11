@@ -176,7 +176,7 @@ src_prepare() {
 
 src_compile() {
 	cd "src/${EGO_PN}" || die
-	export GOPATH="${WORKDIR}/${P}:${PWD}/vendor:$(get_golibdir_gopath)"
+	export GOPATH="${WORKDIR}/${P}:${PWD}/vendor"
 
 	# setup CFLAGS and LDFLAGS for separate build target
 	# see https://github.com/tianon/docker-overlay/pull/10
