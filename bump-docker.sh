@@ -19,34 +19,37 @@ if [ "$newVersion" = 'latest' ]; then
 	newVersion="$(wget -qO - 'https://get.docker.io/latest')"
 fi
 
-ebuilds=( app-emulation/docker/docker-${newVersion}*.ebuild )
-binEbuilds=( app-emulation/docker-bin/docker-bin-${newVersion}*.ebuild )
+ebuildVersion="${newVersion//-/_}"
+
+ebuilds=( app-emulation/docker/docker-${ebuildVersion}*.ebuild )
+binEbuilds=( app-emulation/docker-bin/docker-bin-${ebuildVersion}*.ebuild )
 if [ ${#ebuilds[@]} -gt 0 ] && [ ${#binEbuilds[@]} -gt 0 ]; then
 	exit 0
 fi
 
 set -x
 
-if [ ! -e app-emulation/docker-bin/docker-bin-$newVersion.ebuild ]; then
-	ebuilds=( app-emulation/docker-bin/docker-bin-*.ebuild )
-	cp \
-		"${ebuilds[-1]}" \
-		app-emulation/docker-bin/docker-bin-$newVersion.ebuild
-fi
-ebuild app-emulation/docker-bin/docker-bin-$newVersion.ebuild digest
-git add app-emulation/docker-bin/docker-bin-$newVersion.ebuild
+#if [ ! -e app-emulation/docker-bin/docker-bin-$ebuildVersion.ebuild ]; then
+#	ebuilds=( app-emulation/docker-bin/docker-bin-*.ebuild )
+#	cp \
+#		"${ebuilds[-1]}" \
+#		app-emulation/docker-bin/docker-bin-$ebuildVersion.ebuild
+#fi
+#ebuild app-emulation/docker-bin/docker-bin-$ebuildVersion.ebuild digest
+#git add app-emulation/docker-bin/docker-bin-$ebuildVersion.ebuild
 
-if [ ! -e app-emulation/docker/docker-$newVersion.ebuild ]; then
+if [ ! -e app-emulation/docker/docker-$ebuildVersion.ebuild ]; then
 	cp \
 		app-emulation/docker/docker-9999.ebuild \
-		app-emulation/docker/docker-$newVersion.ebuild
+		app-emulation/docker/docker-$ebuildVersion.ebuild
 	commit="$(git ls-remote https://github.com/docker/docker.git "refs/tags/v$newVersion^{}" | cut -b -7)"
-	sed -i 's/DOCKER_GITCOMMIT=""/DOCKER_GITCOMMIT="'$commit'"/' app-emulation/docker/docker-$newVersion.ebuild
+	sed -i 's/DOCKER_GITCOMMIT=""/DOCKER_GITCOMMIT="'$commit'"/' app-emulation/docker/docker-$ebuildVersion.ebuild
 fi
-ebuild app-emulation/docker/docker-$newVersion.ebuild digest
-git add app-emulation/docker/docker-$newVersion.ebuild
+ebuild app-emulation/docker/docker-$ebuildVersion.ebuild digest
+git add app-emulation/docker/docker-$ebuildVersion.ebuild
 
-git add app-emulation/docker{,-bin}/Manifest
+#git add app-emulation/docker-bin/Manifest
+git add app-emulation/docker/Manifest
 
 repoman fix
 repoman full
