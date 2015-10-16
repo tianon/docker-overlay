@@ -4,44 +4,42 @@
 
 EAPI=5
 
-DESCRIPTION="Machine management for a container-centric world"
-HOMEPAGE="https://github.com/docker/machine"
-SRC_URI=""
-
 inherit eutils
 
+EGO_PN="github.com/docker/${PN}"
+
 if [[ ${PV} == *9999 ]]; then
-	SRC_URI=""
-	EGIT_REPO_URI="git://github.com/docker/${PN}.git"
-	inherit git-2
+	inherit golang-vcs
 else
 	MY_PV="${PV/_/-}"
-	MY_P="${PN}-${MY_PV}"
-	SRC_URI="https://github.com/docker/${PN}/archive/v${MY_PV}.tar.gz -> ${MY_P}.tar.gz"
-	S="${WORKDIR}/${MY_P}"
+	EGIT_COMMIT="v${MY_PV}"
+	SRC_URI="https://github.com/docker/${PN}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64"
+	inherit golang-vcs-snapshot
 fi
 
+DESCRIPTION="Machine management for a container-centric world"
+HOMEPAGE="https://github.com/docker/machine"
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-DEPEND=">=dev-lang/go-1.3"
-RDEPEND="dev-vcs/git"
+DEPEND=""
+RDEPEND=""
 
 src_prepare() {
+	cd "src/${EGO_PN}" || die
 	epatch_user
 }
 
 src_compile() {
-	export GOPATH="${T}/gopath"
-	mkdir -pv "$GOPATH/src/github.com/docker" || die
-	ln -sv "${S}" "$GOPATH/src/github.com/docker/${PN}" || die
-	export GOPATH="$GOPATH:${S}/Godeps/_workspace"
-	go build -v -o "docker-$PN" || die
+	cd "src/${EGO_PN}" || die
+	export GOPATH="${WORKDIR}/${P}:${PWD}/Godeps/_workspace"
+	make build
 }
 
 src_install() {
-	dobin "docker-$PN"
+	cd "src/${EGO_PN}" || die
+	dobin "bin/docker-${PN}"
 }
