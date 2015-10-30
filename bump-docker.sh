@@ -45,6 +45,11 @@ if [ ! -e app-emulation/docker/docker-$ebuildVersion.ebuild ]; then
 	commit="$(git ls-remote https://github.com/docker/docker.git "refs/tags/v$newVersion^{}" | cut -b -7)"
 	sed -i 's/DOCKER_GITCOMMIT=""/DOCKER_GITCOMMIT="'$commit'"/' app-emulation/docker/docker-$ebuildVersion.ebuild
 fi
+eval "$(emerge --info | grep ^DISTDIR=)"
+: ${DISTDIR:=/usr/portage/distfiles}
+if [ ! -s "$DISTDIR/docker-$ebuildVersion.tar.gz" ]; then
+	wget -O "$DISTDIR/docker-$ebuildVersion.tar.gz" "https://github.com/docker/docker/archive/v${newVersion}.tar.gz"
+fi
 ebuild app-emulation/docker/docker-$ebuildVersion.ebuild digest
 git add app-emulation/docker/docker-$ebuildVersion.ebuild
 
