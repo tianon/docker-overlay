@@ -62,7 +62,7 @@ RDEPEND="
 	)
 
 	seccomp? (
-		sys-libs/libseccomp[static-libs]
+		>=sys-libs/libseccomp-2.2.1[static-libs]
 	)
 "
 
