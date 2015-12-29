@@ -26,7 +26,7 @@ DESCRIPTION="Docker complements kernel namespacing with a high-level API which o
 HOMEPAGE="https://dockerproject.org"
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="apparmor aufs btrfs +device-mapper experimental overlay"
+IUSE="apparmor aufs btrfs +device-mapper experimental overlay seccomp"
 
 # https://github.com/docker/docker/blob/master/hack/PACKAGERS.md#build-dependencies
 CDEPEND="
@@ -59,6 +59,10 @@ RDEPEND="
 
 	apparmor? (
 		sys-libs/libapparmor[static-libs]
+	)
+
+	seccomp? (
+		sys-libs/libseccomp[static-libs]
 	)
 "
 
@@ -198,9 +202,11 @@ src_compile() {
 		fi
 	done
 
-	if use apparmor; then
-		DOCKER_BUILDTAGS+=' apparmor'
-	fi
+	for tag in apparmor seccomp; do
+		if use $tag; then
+			DOCKER_BUILDTAGS+=" $tag"
+		fi
+	done
 
 	# https://github.com/docker/docker/pull/13338
 	if use experimental; then
