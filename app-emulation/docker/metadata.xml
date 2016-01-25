@@ -8,40 +8,54 @@
 		scale, in production, on VMs, bare metal, OpenStack clusters, public
 		clouds and more.
 	</longdescription>
-	<herd>proxy-maintainers</herd>
-	<maintainer status="active">
-		<email>admwiggin@gmail.com</email>
+	<maintainer status="active" type="person">
+		<email>tianon@dockerproject.org</email>
 		<name>Tianon</name>
+	</maintainer>
+	<maintainer type="person">
+		<email>xarthisius@gentoo.org</email>
+		<name>Kacper Kowalik</name>
+	</maintainer>
+	<maintainer type="person">
+		<email>alunduil@gentoo.org</email>
+		<name>Alex Brandt</name>
+	</maintainer>
+	<maintainer type="project">
+		<email>proxy-maint@gentoo.org</email>
+		<name>Proxy Maintainers</name>
 	</maintainer>
 	<use>
 		<flag name="aufs">
-			Enable dependencies for the "aufs" graph driver, including
+			Enables dependencies for the "aufs" graph driver, including
 			necessary kernel flags.
 		</flag>
+		<flag name="apparmor">
+			Enable AppArmor support.
+		</flag>
 		<flag name="btrfs">
-			Enable dependencies for the "btrfs" graph driver, including
+			Enables dependencies for the "btrfs" graph driver, including
 			necessary kernel flags.
 		</flag>
 		<flag name="contrib">
 			Install additional contrib scripts and components.
 		</flag>
 		<flag name="device-mapper">
-			Enable dependencies for the "devicemapper" graph driver, including
+			Enables dependencies for the "devicemapper" graph driver, including
 			necessary kernel flags.
-		</flag>
-		<flag name="overlay">
-			Enable dependencies for the "overlay" graph driver, including
-			necessary kernel flags.
-		</flag>
-		<flag name="lxc">
-			Enable dependencies for the "lxc" execution driver.
 		</flag>
 		<flag name="experimental">
 			Enable features labelled by upstream to be of "experimental"
 			quality and not yet ready for general consumption.
 		</flag>
-		<flag name="apparmor">
-			Enable AppArmor support.
+		<flag name="overlay">
+			Enables dependencies for the "overlay" graph driver, including
+			necessary kernel flags.
+		</flag>
+		<flag name="lxc">
+			Enables dependencies for the "lxc" execution driver.
 		</flag>
 	</use>
+	<upstream>
+		<remote-id type="github">docker/docker</remote-id>
+	</upstream>
 </pkgmetadata>
