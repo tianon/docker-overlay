@@ -4,7 +4,7 @@
 		<description lang="en"><![CDATA[Overlay for Docker]]></description>
 		<homepage>https://github.com/tianon/docker-overlay</homepage>
 		<owner type="person">
-			<email>admwiggin@gmail.com</email>
+			<email>tianon@dockerproject.org</email>
 			<name><![CDATA[Tianon Gravi]]></name>
 		</owner>
 		<source type="git">git://github.com/tianon/docker-overlay.git</source>
