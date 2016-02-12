@@ -44,7 +44,7 @@ if [ ! -e app-emulation/docker/docker-$ebuildVersion.ebuild ]; then
 		app-emulation/docker/docker-$ebuildVersion.ebuild
 fi
 commit="$(git ls-remote https://github.com/docker/docker.git "refs/tags/v$newVersion^{}" | cut -b -7)"
-sed -i 's/DOCKER_GITCOMMIT=""/DOCKER_GITCOMMIT="'$commit'"/' app-emulation/docker/docker-$ebuildVersion.ebuild
+sed -i 's/DOCKER_GITCOMMIT=".*"/DOCKER_GITCOMMIT="'$commit'"/' app-emulation/docker/docker-$ebuildVersion.ebuild
 eval "$(emerge --info | grep ^DISTDIR=)"
 : ${DISTDIR:=/usr/portage/distfiles}
 if [ ! -s "$DISTDIR/docker-$ebuildVersion.tar.gz" ]; then
