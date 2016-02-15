@@ -34,6 +34,9 @@ CDEPEND="
 	device-mapper? (
 		>=sys-fs/lvm2-2.02.89[thin]
 	)
+	seccomp? (
+		>=sys-libs/libseccomp-2.2.1[static-libs]
+	)
 "
 
 DEPEND="
@@ -59,10 +62,6 @@ RDEPEND="
 
 	apparmor? (
 		sys-libs/libapparmor[static-libs]
-	)
-
-	seccomp? (
-		>=sys-libs/libseccomp-2.2.1[static-libs]
 	)
 "
 
@@ -187,10 +186,11 @@ src_compile() {
 	[ "$DOCKER_GITCOMMIT" ] && export DOCKER_GITCOMMIT
 
 	if gcc-specs-pie; then
-		sed -i "s/EXTLDFLAGS_STATIC='/EXTLDFLAGS_STATIC='-fno-PIC /" hack/make.sh || die
+		sed -i "s/EXTLDFLAGS_STATIC='/&-fno-PIC /" hack/make.sh || die
 		grep -q -- '-fno-PIC' hack/make.sh || die 'hardened sed failed'
 
-		sed -i "s/LDFLAGS_STATIC_DOCKER='/LDFLAGS_STATIC_DOCKER='-extldflags -fno-PIC /" hack/make/dynbinary || die
+		sed  "s/LDFLAGS_STATIC_DOCKER='/&-extldflags -fno-PIC /" \
+			-i hack/make/dynbinary || die
 		grep -q -- '-fno-PIC' hack/make/dynbinary || die 'hardened sed failed'
 	fi
 
