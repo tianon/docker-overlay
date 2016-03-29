@@ -22,7 +22,6 @@ DESCRIPTION="A daemon to control runC"
 HOMEPAGE="https://containerd.tools"
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS=""
 IUSE=""
 
 DEPEND=""
