@@ -13,7 +13,7 @@ if [[ ${PV} == *9999 ]]; then
 else
 	MY_PV="${PV/_/-}"
 	EGIT_COMMIT="${MY_PV}"
-	SRC_URI="https://github.com/docker/${PN}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
+	SRC_URI="https://github.com/docker/${PN}/archive/v${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64"
 	inherit golang-vcs-snapshot
 fi
