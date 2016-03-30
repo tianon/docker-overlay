@@ -36,7 +36,7 @@ src_compile() {
 	cd "src/${EGO_PN}" || die
 	export GOPATH="${WORKDIR}/${P}" # ${PWD}/vendor
 	[ -z "$EGIT_COMMIT" ] || export GIT_COMMIT="$EGIT_COMMIT"
-	make LDFLAGS=
+	LDFLAGS= make
 }
 
 src_install() {
