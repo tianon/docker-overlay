@@ -12,8 +12,8 @@ if [[ ${PV} == *9999 ]]; then
 	inherit golang-vcs
 else
 	MY_PV="${PV/_/-}"
-	EGIT_COMMIT="${MY_PV}"
-	SRC_URI="https://github.com/docker/${PN}/archive/v${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
+	EGIT_COMMIT="v${MY_PV}"
+	SRC_URI="https://github.com/docker/${PN}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64"
 	inherit golang-vcs-snapshot
 fi
@@ -35,8 +35,7 @@ src_prepare() {
 src_compile() {
 	cd "src/${EGO_PN}" || die
 	export GOPATH="${WORKDIR}/${P}" # ${PWD}/vendor
-	[ -z "$EGIT_COMMIT" ] || export GIT_COMMIT="$EGIT_COMMIT"
-	LDFLAGS= make
+	LDFLAGS= make GIT_COMMIT="$EGIT_COMMIT"
 }
 
 src_install() {
