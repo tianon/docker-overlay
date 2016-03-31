@@ -60,7 +60,7 @@ RDEPEND="
 	>=dev-vcs/git-1.7
 	>=app-arch/xz-utils-4.9
 
-	app-emulation/containerd
+	>=app-emulation/containerd-0.1.0
 
 	apparmor? (
 		sys-libs/libapparmor[static-libs]
