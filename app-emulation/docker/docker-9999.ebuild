@@ -42,6 +42,7 @@ CDEPEND="
 DEPEND="
 	${CDEPEND}
 
+	>=dev-lang/go-1.4:=
 	dev-go/go-md2man
 
 	btrfs? (
