@@ -51,10 +51,10 @@ if [ ! -s "$DISTDIR/docker-$ebuildVersion.tar.gz" ]; then
 	wget -O "$DISTDIR/docker-$ebuildVersion.tar.gz" "https://github.com/docker/docker/archive/v${newVersion}.tar.gz"
 fi
 ebuild app-emulation/docker/docker-$ebuildVersion.ebuild digest
-git add app-emulation/docker/docker-$ebuildVersion.ebuild
+#git add app-emulation/docker/docker-$ebuildVersion.ebuild
 
 #git add app-emulation/docker-bin/Manifest
-git add app-emulation/docker/Manifest
+#git add app-emulation/docker/Manifest
 
-repoman fix
-repoman full
+#repoman fix
+#repoman full
