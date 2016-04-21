@@ -22,7 +22,6 @@ DESCRIPTION="Machine management for a container-centric world"
 HOMEPAGE="https://github.com/docker/machine"
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS=""
 IUSE=""
 
 DEPEND=""
