@@ -23,8 +23,10 @@ SLOT="0"
 IUSE="+seccomp"
 
 DEPEND=""
-RDEPEND="app-emulation/runc
-	seccomp? ( sys-libs/libseccomp )"
+RDEPEND="
+	>=app-emulation/runc-0.1.0
+	seccomp? ( sys-libs/libseccomp )
+"
 
 S=${WORKDIR}/${P}/src/${EGO_PN}
 
