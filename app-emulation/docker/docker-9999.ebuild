@@ -173,7 +173,7 @@ pkg_setup() {
 
 src_prepare() {
 	cd "src/${EGO_PN}" || die
-	epatch "${FILESDIR}/docker-containerd.patch"
+	sed -i 's/docker-containerd/containerd/g; s/docker-runc/runc/g' libcontainerd/remote_linux.go
 	# allow user patches (use sparingly - upstream won't support them)
 	epatch_user
 }
