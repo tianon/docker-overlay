@@ -226,7 +226,7 @@ src_install() {
 	cd "src/${EGO_PN}" || die
 	VERSION="$(cat VERSION)"
 	newbin "bundles/$VERSION/dynbinary-client/docker-$VERSION" docker
-	newsbin "bundles/$VERSION/dynbinary-daemon/dockerd-$VERSION" dockerd
+	newbin "bundles/$VERSION/dynbinary-daemon/dockerd-$VERSION" dockerd
 
 	newinitd contrib/init/openrc/docker.initd docker
 	newconfd contrib/init/openrc/docker.confd docker
