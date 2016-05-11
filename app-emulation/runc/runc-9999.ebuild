@@ -21,10 +21,13 @@ fi
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="+seccomp"
+IUSE="apparmor +seccomp"
 
 DEPEND=">=dev-lang/go-1.4:="
-RDEPEND="seccomp? ( sys-libs/libseccomp )"
+RDEPEND="
+	apparmor? ( sys-libs/libapparmor )
+	seccomp? ( sys-libs/libseccomp )
+"
 
 src_prepare() {
 	epatch_user
@@ -42,9 +45,12 @@ src_compile() {
 	export GOPATH="${PWD}/.gopath:${PWD}/vendor"
 
 	# build up optional flags
-	local options=( $(usex seccomp "seccomp") )
+	local options=(
+		$(usex apparmor 'apparmor')
+		$(usex seccomp 'seccomp')
+	)
 
-	emake BUILDTAGS="${options[@]}"
+	emake BUILDTAGS="${options[*]}"
 }
 
 src_install() {
