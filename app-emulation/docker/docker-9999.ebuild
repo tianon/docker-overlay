@@ -35,6 +35,7 @@ CDEPEND="
 		>=sys-fs/lvm2-2.02.89[thin]
 	)
 	seccomp? ( >=sys-libs/libseccomp-2.2.1 )
+	apparmor? ( sys-libs/libapparmor )
 "
 
 DEPEND="
@@ -61,8 +62,6 @@ RDEPEND="
 
 	>=app-emulation/containerd-0.2.0
 	>=app-emulation/runc-0.1.0[apparmor?,seccomp?]
-
-	apparmor? ( sys-libs/libapparmor )
 "
 
 RESTRICT="installsources strip"
