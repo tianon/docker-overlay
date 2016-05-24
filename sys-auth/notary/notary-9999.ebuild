@@ -27,7 +27,7 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-DEPEND=">=dev-lang/go-1.3"
+DEPEND=">=dev-lang/go-1.6"
 RDEPEND="dev-vcs/git"
 
 src_prepare() {
@@ -38,9 +38,8 @@ src_compile() {
 	export GOPATH="${T}/gopath"
 	mkdir -pv "$GOPATH/src/github.com/docker" || die
 	ln -sv "${S}" "$GOPATH/src/github.com/docker/${PN}" || die
-	export GOPATH="$GOPATH:${S}/Godeps/_workspace"
 	cd "${T}/gopath/src/github.com/docker/${PN}" || die
-	go install -v ./... || die
+	go install -v ./cmd/... || die
 }
 
 src_install() {
