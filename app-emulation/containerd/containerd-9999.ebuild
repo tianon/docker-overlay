@@ -24,7 +24,7 @@ IUSE="+seccomp"
 
 DEPEND=""
 RDEPEND="
-	>=app-emulation/runc-0.1.0
+	>=app-emulation/runc-0.1.1
 	seccomp? ( sys-libs/libseccomp )
 "
 

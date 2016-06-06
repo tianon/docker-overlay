@@ -1,37 +1,37 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
+# $Header: $
 
-EAPI=5
+EAPI=6
+EGO_PN="github.com/opencontainers/${PN}"
 
-inherit eutils multilib
+if [[ ${PV} == *9999 ]]; then
+	inherit golang-vcs
+else
+	MY_PV="${PV/_/-}"
+	EGIT_COMMIT="v${MY_PV}"
+	SRC_URI="https://${EGO_PN}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
+	KEYWORDS="~amd64"
+	inherit golang-vcs-snapshot
+fi
 
 DESCRIPTION="runc container cli tools"
 HOMEPAGE="http://runc.io"
-
-GITHUB_URI="github.com/opencontainers/runc"
-
-if [[ ${PV} == *9999* ]]; then
-	EGIT_REPO_URI="git://${GITHUB_URI}.git"
-	inherit git-r3
-else
-	MY_PV="${PV/_/-}"
-	SRC_URI="https://${GITHUB_URI}/archive/v${MY_PV}.tar.gz -> ${P}.tar.gz"
-	KEYWORDS="~amd64"
-fi
 
 LICENSE="Apache-2.0"
 SLOT="0"
 IUSE="apparmor +seccomp"
 
-DEPEND=">=dev-lang/go-1.4:="
+DEPEND=""
 RDEPEND="
 	apparmor? ( sys-libs/libapparmor )
 	seccomp? ( sys-libs/libseccomp )
 "
 
+S=${WORKDIR}/${P}/src/${EGO_PN}
+
 src_prepare() {
-	epatch_user
+	eapply_user
 }
 
 src_compile() {
