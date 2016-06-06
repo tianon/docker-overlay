@@ -15,7 +15,8 @@ if [[ ${PV} == *9999* ]]; then
 	EGIT_REPO_URI="git://${GITHUB_URI}.git"
 	inherit git-r3
 else
-	SRC_URI="https://${GITHUB_URI}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+	MY_PV="${PV/_/-}"
+	SRC_URI="https://${GITHUB_URI}/archive/v${MY_PV}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64"
 fi
 
