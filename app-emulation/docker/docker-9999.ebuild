@@ -26,7 +26,7 @@ DESCRIPTION="The core functions you need to create Docker images and run Docker 
 HOMEPAGE="https://dockerproject.org"
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="apparmor aufs btrfs +device-mapper experimental overlay seccomp"
+IUSE="apparmor aufs btrfs +device-mapper overlay seccomp"
 
 # https://github.com/docker/docker/blob/master/hack/PACKAGERS.md#build-dependencies
 CDEPEND="
@@ -227,13 +227,6 @@ src_compile() {
 			DOCKER_BUILDTAGS+=" $tag"
 		fi
 	done
-
-	# https://github.com/docker/docker/pull/13338
-	if use experimental; then
-		export DOCKER_EXPERIMENTAL=1
-	else
-		unset DOCKER_EXPERIMENTAL
-	fi
 
 	# time to build!
 	./hack/make.sh dynbinary || die 'dynbinary failed'
