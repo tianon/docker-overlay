@@ -90,7 +90,7 @@ CONFIG_CHECK="
 	~CGROUP_HUGETLB
 	~NET_CLS_CGROUP
 	~CFS_BANDWIDTH ~FAIR_GROUP_SCHED ~RT_GROUP_SCHED
-	~IP_VS
+	~IP_VS ~IP_VS_PROTO_TCP ~IP_VS_PROTO_UDP ~IP_VS_NFCT
 
 	~VXLAN
 	~XFRM_ALGO ~XFRM_USER
@@ -260,7 +260,7 @@ src_install() {
 	dobashcomp contrib/completion/bash/*
 
 	insinto /usr/share/zsh/site-functions
-	doins contrib/completion/zsh/*
+	doins contrib/completion/zsh/_*
 
 	insinto /usr/share/vim/vimfiles
 	doins -r contrib/syntax/vim/ftdetect
@@ -268,7 +268,7 @@ src_install() {
 
 	# note: intentionally not using "doins" so that we preserve +x bits
 	dodir /usr/share/${PN}/contrib
-	cp -R contrib/* "${D}/usr/share/${PN}/contrib"
+	cp -R contrib/* "${ED}/usr/share/${PN}/contrib"
 }
 
 pkg_postinst() {
