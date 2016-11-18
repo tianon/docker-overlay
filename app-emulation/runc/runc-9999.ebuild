@@ -1,6 +1,6 @@
 # Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=6
 EGO_PN="github.com/opencontainers/${PN}"
@@ -10,8 +10,10 @@ if [[ ${PV} == *9999 ]]; then
 else
 	MY_PV="${PV/_/-}"
 	EGIT_COMMIT="v${MY_PV}"
+	RUNC_GITCOMMIT="" # Change this when you update the ebuild
+	[ "$RUNC_GITCOMMIT" ] || die "RUNC_GITCOMMIT must be added manually for each bump!"
 	SRC_URI="https://${EGO_PN}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
-	KEYWORDS="~amd64"
+	KEYWORDS="~amd64 ~ppc64"
 	inherit golang-vcs-snapshot
 fi
 
@@ -20,7 +22,7 @@ HOMEPAGE="http://runc.io"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="apparmor +seccomp"
+IUSE="apparmor hardened +seccomp"
 
 DEPEND="
 	>=dev-lang/go-1.6:=
@@ -33,13 +35,15 @@ RDEPEND="
 S=${WORKDIR}/${P}/src/${EGO_PN}
 
 src_prepare() {
-	eapply_user
+	default
+	[[ ${PN} == *9999 ]] || sed -i -e "s/COMMIT :=.*$/COMMIT := ${RUNC_GITCOMMIT}/" Makefile || die
 }
 
 src_compile() {
 	# Taken from app-emulation/docker-1.7.0-r1
 	export CGO_CFLAGS="-I${ROOT}/usr/include"
-	export CGO_LDFLAGS="-L${ROOT}/usr/$(get_libdir)"
+	export CGO_LDFLAGS="$(usex hardened '-fno-PIC ' '')
+		-L${ROOT}/usr/$(get_libdir)"
 
 	# Setup GOPATH so things build
 	rm -rf .gopath
