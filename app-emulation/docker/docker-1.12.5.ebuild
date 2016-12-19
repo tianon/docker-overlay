@@ -13,7 +13,7 @@ if [[ ${PV} = *9999* ]]; then
 	inherit git-r3
 else
 	MY_PV="${PV/_/-}"
-	DOCKER_GITCOMMIT="1f9b3ef"
+	DOCKER_GITCOMMIT="7392c3b"
 	EGIT_COMMIT="v${MY_PV}"
 	SRC_URI="https://${EGO_PN}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64"
@@ -26,7 +26,7 @@ DESCRIPTION="The core functions you need to create Docker images and run Docker 
 HOMEPAGE="https://dockerproject.org"
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="apparmor aufs btrfs +container-init +device-mapper hardened overlay pkcs11 seccomp"
+IUSE="apparmor aufs btrfs +device-mapper experimental overlay seccomp"
 
 # https://github.com/docker/docker/blob/master/project/PACKAGERS.md#build-dependencies
 CDEPEND="
@@ -61,8 +61,6 @@ RDEPEND="
 
 	>=app-emulation/containerd-0.2.5
 	app-emulation/runc[apparmor?,seccomp?]
-	app-emulation/docker-proxy
-	container-init? ( >=sys-process/tini-0.13.0[static] )
 "
 
 RESTRICT="installsources strip"
@@ -90,7 +88,7 @@ CONFIG_CHECK="
 	~CGROUP_HUGETLB
 	~NET_CLS_CGROUP
 	~CFS_BANDWIDTH ~FAIR_GROUP_SCHED ~RT_GROUP_SCHED
-	~IP_VS ~IP_VS_PROTO_TCP ~IP_VS_PROTO_UDP ~IP_VS_NFCT
+	~IP_VS
 
 	~VXLAN
 	~XFRM_ALGO ~XFRM_USER
@@ -204,7 +202,7 @@ src_compile() {
 	# if we're building from a tarball, we need the GITCOMMIT value
 	[ "$DOCKER_GITCOMMIT" ] && export DOCKER_GITCOMMIT
 
-	if use hardened; then
+	if gcc-specs-pie; then
 		sed -i "s/EXTLDFLAGS_STATIC='/&-fno-PIC /" hack/make.sh || die
 		grep -q -- '-fno-PIC' hack/make.sh || die 'hardened sed failed'
 
@@ -224,11 +222,18 @@ src_compile() {
 		fi
 	done
 
-	for tag in apparmor pkcs11 seccomp; do
+	for tag in apparmor seccomp; do
 		if use $tag; then
 			DOCKER_BUILDTAGS+=" $tag"
 		fi
 	done
+
+	# https://github.com/docker/docker/pull/13338
+	if use experimental; then
+		export DOCKER_EXPERIMENTAL=1
+	else
+		unset DOCKER_EXPERIMENTAL
+	fi
 
 	# time to build!
 	./hack/make.sh dynbinary || die 'dynbinary failed'
@@ -241,10 +246,10 @@ src_install() {
 	VERSION="$(cat VERSION)"
 	newbin "bundles/$VERSION/dynbinary-client/docker-$VERSION" docker
 	newbin "bundles/$VERSION/dynbinary-daemon/dockerd-$VERSION" dockerd
+	newbin "bundles/$VERSION/dynbinary-daemon/docker-proxy-$VERSION" docker-proxy
 	dosym containerd /usr/bin/docker-containerd
 	dosym containerd-shim /usr/bin/docker-containerd-shim
 	dosym runc /usr/bin/docker-runc
-	use container-init && dosym tini /usr/bin/docker-init
 
 	newinitd contrib/init/openrc/docker.initd docker
 	newconfd contrib/init/openrc/docker.confd docker
