@@ -1,4 +1,4 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -10,8 +10,8 @@ if [[ ${PV} == *9999 ]]; then
 else
 	MY_PV="${PV/_/-}"
 	EGIT_COMMIT="v${MY_PV}"
-	RUNC_GITCOMMIT="c91b5be" # Change this when you update the ebuild
-	[ "$RUNC_GITCOMMIT" ] || die "RUNC_GITCOMMIT must be added manually for each bump!"
+	RUNC_COMMIT="c91b5be" # Change this when you update the ebuild
+	[ "$RUNC_COMMIT" ] || die "RUNC_COMMIT must be added manually for each bump!"
 	SRC_URI="https://${EGO_PN}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64 ~ppc64"
 	inherit golang-vcs-snapshot
@@ -24,20 +24,12 @@ LICENSE="Apache-2.0"
 SLOT="0"
 IUSE="apparmor hardened +seccomp"
 
-DEPEND="
-	>=dev-lang/go-1.6:=
-"
 RDEPEND="
 	apparmor? ( sys-libs/libapparmor )
 	seccomp? ( sys-libs/libseccomp )
 "
 
 S=${WORKDIR}/${P}/src/${EGO_PN}
-
-src_prepare() {
-	default
-	[[ ${PN} == *9999 ]] || sed -i -e "s/COMMIT :=.*$/COMMIT := ${RUNC_GITCOMMIT}/" Makefile || die
-}
 
 src_compile() {
 	# Taken from app-emulation/docker-1.7.0-r1
@@ -57,7 +49,8 @@ src_compile() {
 		$(usex seccomp 'seccomp')
 	)
 
-	emake BUILDTAGS="${options[*]}"
+	emake BUILDTAGS="${options[*]}" \
+		COMMIT="${RUNC_COMMIT}"
 }
 
 src_install() {
