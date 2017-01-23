@@ -55,6 +55,10 @@ src_compile() {
 	local options=(
 		$(usex apparmor 'apparmor')
 		$(usex seccomp 'seccomp')
+
+		# enable ambient capabilities
+		# https://github.com/opencontainers/runc/pull/1286 might make this obsolete
+		ambient
 	)
 
 	emake BUILDTAGS="${options[*]}"
