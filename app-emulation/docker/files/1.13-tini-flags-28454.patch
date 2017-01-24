@@ -1,0 +1,44 @@
+From d7df7315971653e11bab124800a5938e7e5c6316 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Elan=20Ruusam=C3=A4e?= <glen@delfi.ee>
+Date: Wed, 16 Nov 2016 00:07:13 +0200
+Subject: [PATCH] do not require custom build of tini
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+https://github.com/krallin/tini/issues/55#issuecomment-260507562
+https://github.com/krallin/tini/issues/55#issuecomment-260538243
+https://github.com/docker/docker/pull/28037
+
+Signed-off-by: Elan Ruusamäe <glen@delfi.ee>
+---
+ daemon/oci_linux.go                 | 2 +-
+ hack/dockerfile/install-binaries.sh | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/daemon/oci_linux.go b/daemon/oci_linux.go
+index 5a2158c..91c0f5e 100644
+--- a/daemon/oci_linux.go
++++ b/daemon/oci_linux.go
+@@ -593,7 +593,7 @@ func (daemon *Daemon) populateCommonSpec(s *specs.Spec, c *container.Container)
+ 	if c.HostConfig.PidMode.IsPrivate() {
+ 		if (c.HostConfig.Init != nil && *c.HostConfig.Init) ||
+ 			(c.HostConfig.Init == nil && daemon.configStore.Init) {
+-			s.Process.Args = append([]string{"/dev/init", c.Path}, c.Args...)
++			s.Process.Args = append([]string{"/dev/init", "--", c.Path}, c.Args...)
+ 			var path string
+ 			if daemon.configStore.InitPath == "" && c.HostConfig.InitPath == "" {
+ 				path, err = exec.LookPath(DefaultInitBinary)
+diff --git a/hack/dockerfile/install-binaries.sh b/hack/dockerfile/install-binaries.sh
+index bd4c63c..7c1984b 100755
+--- a/hack/dockerfile/install-binaries.sh
++++ b/hack/dockerfile/install-binaries.sh
+@@ -77,7 +77,7 @@ do
+ 			git clone https://github.com/krallin/tini.git "$GOPATH/tini"
+ 			cd "$GOPATH/tini"
+ 			git checkout -q "$TINI_COMMIT"
+-			cmake -DMINIMAL=ON .
++			cmake .
+ 			make tini-static
+ 			cp tini-static /usr/local/bin/docker-init
+ 			;;

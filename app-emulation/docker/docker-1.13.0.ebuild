@@ -193,6 +193,11 @@ pkg_setup() {
 	enewgroup docker
 }
 
+src_prepare() {
+	epatch "${FILESDIR}/1.13-tini-flags-28454.patch"
+	default
+}
+
 src_compile() {
 	export GOPATH="${WORKDIR}/${P}:${PWD}/vendor"
 
