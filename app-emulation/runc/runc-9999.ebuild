@@ -6,7 +6,11 @@ EAPI=6
 EGO_PN="github.com/opencontainers/${PN}"
 
 if [[ ${PV} == *9999 ]]; then
-	inherit golang-vcs
+	MY_PV="${PV/_/-}"
+	EGIT_COMMIT="51371867a01c467f08af739783b8beafc154c4d7"
+	# from https://github.com/docker/docker/blob/master/hack/dockerfile/binaries-commits
+	SRC_URI="https://${EGO_PN}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
+	inherit golang-vcs-snapshot
 else
 	MY_PV="${PV/_/-}"
 	EGIT_COMMIT="v${MY_PV}"
