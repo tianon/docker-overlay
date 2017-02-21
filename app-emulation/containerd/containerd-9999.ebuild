@@ -6,7 +6,8 @@ EAPI=6
 EGO_PN="github.com/docker/${PN}"
 
 if [[ ${PV} == *9999 ]]; then
-	inherit golang-vcs
+	SRC_URI="https://${EGO_PN}/archive/docker-1.13.x.tar.gz -> ${P}.tar.gz"
+	inherit golang-vcs-snapshot
 else
 	MY_PV="${PV/_/-}"
 	EGIT_COMMIT="v${MY_PV}"
