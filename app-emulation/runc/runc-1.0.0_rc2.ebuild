@@ -16,6 +16,7 @@ else
 	KEYWORDS="~amd64 ~ppc64"
 	inherit golang-vcs-snapshot
 fi
+inherit eutils
 
 DESCRIPTION="runc container cli tools"
 HOMEPAGE="http://runc.io"
@@ -30,6 +31,11 @@ RDEPEND="
 "
 
 S=${WORKDIR}/${P}/src/${EGO_PN}
+
+src_prepare() {
+	epatch "${FILESDIR}/1172-ambient-tag.patch" # CVE-2016-8867, see https://github.com/opencontainers/runc/pull/1172
+	default
+}
 
 src_compile() {
 	# Taken from app-emulation/docker-1.7.0-r1

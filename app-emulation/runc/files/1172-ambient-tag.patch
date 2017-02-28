@@ -1,0 +1,83 @@
+From 603c151e6c2a4a37c7fae887960d9cf46a105266 Mon Sep 17 00:00:00 2001
+From: Michael Crosby <crosbymichael@gmail.com>
+Date: Wed, 2 Nov 2016 10:47:22 -0700
+Subject: [PATCH] Move ambient capabilties behind build tag
+
+This moves the ambient capability support behind an `ambient` build tag
+so that it is only compiled upon request.
+
+Signed-off-by: Michael Crosby <crosbymichael@gmail.com>
+---
+ Makefile                               | 2 +-
+ README.md                              | 1 +
+ libcontainer/capabilities_ambient.go   | 7 +++++++
+ libcontainer/capabilities_linux.go     | 2 --
+ libcontainer/capabilities_noambient.go | 7 +++++++
+ 5 files changed, 16 insertions(+), 3 deletions(-)
+ create mode 100644 libcontainer/capabilities_ambient.go
+ create mode 100644 libcontainer/capabilities_noambient.go
+
+diff --git a/Makefile b/Makefile
+index 9b72ed6..779be92 100644
+--- a/Makefile
++++ b/Makefile
+@@ -33,7 +33,7 @@ static: $(RUNC_LINK)
+ 	CGO_ENABLED=1 go build -i -tags "$(BUILDTAGS) cgo static_build" -ldflags "-w -extldflags -static -X main.gitCommit=${COMMIT} -X main.version=${VERSION}" -o runc .
+ 
+ release: $(RUNC_LINK)
+-	@flag_list=(seccomp selinux apparmor static); \
++	@flag_list=(seccomp selinux apparmor static ambient); \
+ 	unset expression; \
+ 	for flag in "$${flag_list[@]}"; do \
+ 		expression+="' '{'',$${flag}}"; \
+diff --git a/README.md b/README.md
+index b8ed43f..6c6d1d4 100644
+--- a/README.md
++++ b/README.md
+@@ -48,6 +48,7 @@ make BUILDTAGS='seccomp apparmor'
+ | seccomp   | Syscall filtering                  | libseccomp  |
+ | selinux   | selinux process and mount labeling | <none>      |
+ | apparmor  | apparmor profile support           | libapparmor |
++| ambient   | ambient capability support         | kernel 4.3  |
+ 
+ 
+ ### Running the test suite
+diff --git a/libcontainer/capabilities_ambient.go b/libcontainer/capabilities_ambient.go
+new file mode 100644
+index 0000000..50da283
+--- /dev/null
++++ b/libcontainer/capabilities_ambient.go
+@@ -0,0 +1,7 @@
++// +build linux,ambient
++
++package libcontainer
++
++import "github.com/syndtr/gocapability/capability"
++
++const allCapabilityTypes = capability.CAPS | capability.BOUNDS | capability.AMBS
+diff --git a/libcontainer/capabilities_linux.go b/libcontainer/capabilities_linux.go
+index 48338a1..31fd0dc 100644
+--- a/libcontainer/capabilities_linux.go
++++ b/libcontainer/capabilities_linux.go
+@@ -10,8 +10,6 @@ import (
+ 	"github.com/syndtr/gocapability/capability"
+ )
+ 
+-const allCapabilityTypes = capability.CAPS | capability.BOUNDS | capability.AMBS
+-
+ var capabilityMap map[string]capability.Cap
+ 
+ func init() {
+diff --git a/libcontainer/capabilities_noambient.go b/libcontainer/capabilities_noambient.go
+new file mode 100644
+index 0000000..752c4e5
+--- /dev/null
++++ b/libcontainer/capabilities_noambient.go
+@@ -0,0 +1,7 @@
++// +build !ambient,linux
++
++package libcontainer
++
++import "github.com/syndtr/gocapability/capability"
++
++const allCapabilityTypes = capability.CAPS | capability.BOUNDS
