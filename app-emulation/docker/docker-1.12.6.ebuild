@@ -59,7 +59,7 @@ RDEPEND="
 	>=dev-vcs/git-1.7
 	>=app-arch/xz-utils-4.9
 
-	>=app-emulation/containerd-0.2.5
+	>=app-emulation/containerd-0.2.5 <app-emulation/containerd-0.3
 	app-emulation/runc[apparmor?,seccomp?]
 "
 
