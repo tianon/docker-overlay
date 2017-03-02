@@ -20,6 +20,7 @@ if [ "$newVersion" = 'latest' ]; then
 fi
 
 ebuildVersion="${newVersion//-/_}"
+ebuildVersion="${ebuildVersion//_ce/}"
 
 ebuilds=( app-emulation/docker/docker-${ebuildVersion}*.ebuild )
 binEbuilds=( app-emulation/docker-bin/docker-bin-${ebuildVersion}*.ebuild )
