@@ -1,0 +1,11 @@
+# /etc/portage/package.mask/docker
+
+# make sure _all_ my Docker-related packages come from the overlay
+app-emulation/docker::gentoo
+app-emulation/containerd::gentoo
+app-emulation/runc::gentoo
+app-emulation/docker-runc::gentoo
+app-emulation/docker-proxy::gentoo
+
+# I never want _this_ docker
+x11-plugins/docker
