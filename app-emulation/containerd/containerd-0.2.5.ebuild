@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
 EAPI=6
 EGO_PN="github.com/docker/${PN}"
@@ -24,7 +23,10 @@ IUSE="+seccomp"
 
 DEPEND=""
 RDEPEND="
-	>=app-emulation/runc-1.0.0_rc2
+	|| (
+		>=app-emulation/runc-1.0.0_rc2[seccomp?]
+		>=app-emulation/docker-runc-1.0.0_rc2[seccomp?]
+	)
 	seccomp? ( sys-libs/libseccomp )
 "
 
