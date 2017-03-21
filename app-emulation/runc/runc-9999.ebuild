@@ -29,19 +29,14 @@ RDEPEND="
 	seccomp? ( sys-libs/libseccomp )
 "
 
-S=${WORKDIR}/${P}/src/${EGO_PN}
+export GOPATH="${WORKDIR}/${P}"
+S="${GOPATH}/src/${EGO_PN}"
 
 src_compile() {
 	# Taken from app-emulation/docker-1.7.0-r1
 	export CGO_CFLAGS="-I${ROOT}/usr/include"
 	export CGO_LDFLAGS="$(usex hardened '-fno-PIC ' '')
 		-L${ROOT}/usr/$(get_libdir)"
-
-	# Setup GOPATH so things build
-	rm -rf .gopath
-	mkdir -p .gopath/src/"$(dirname "${GITHUB_URI}")"
-	ln -sf ../../../.. .gopath/src/"${GITHUB_URI}"
-	export GOPATH="${PWD}/.gopath:${PWD}/vendor"
 
 	# build up optional flags
 	local options=(
