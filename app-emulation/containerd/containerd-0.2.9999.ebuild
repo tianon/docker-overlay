@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-EGO_PN="github.com/docker/${PN}"
+EGO_PN="github.com/containerd/${PN}"
 
 case "${PV}" in
 	0.2.9999)
