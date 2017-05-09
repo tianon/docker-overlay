@@ -65,11 +65,13 @@ RDEPEND="
 
 	>=app-emulation/containerd-0.2.5 <app-emulation/containerd-0.3
 	|| (
-		app-emulation/runc[apparmor?,seccomp?]
+		>=app-emulation/runc-1.0.0_rc3[apparmor?,seccomp?]
 		app-emulation/docker-runc[apparmor?,seccomp?]
 	)
 	app-emulation/docker-proxy
 	container-init? ( >=sys-process/tini-0.13.0[static] )
+
+	app-emulation/docker-cli
 "
 
 RESTRICT="installsources strip"
@@ -246,7 +248,6 @@ src_compile() {
 
 src_install() {
 	VERSION="$(cat VERSION)"
-	newbin "bundles/$VERSION/dynbinary-client/docker-$VERSION" docker
 	newbin "bundles/$VERSION/dynbinary-daemon/dockerd-$VERSION" dockerd
 	dosym containerd /usr/bin/docker-containerd
 	dosym containerd-shim /usr/bin/docker-containerd-shim
