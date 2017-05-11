@@ -34,7 +34,7 @@ S="${WORKDIR}/${P}/src/${EGO_PN%/...}"
 
 src_compile() {
 	export GOPATH="${WORKDIR}/${P}"
-	emake
+	LDFLAGS= emake
 }
 
 src_install() {
