@@ -45,7 +45,7 @@ src_compile() {
 	)
 
 	emake BUILDTAGS="${options[*]}" \
-		COMMIT="${RUNC_COMMIT}"
+		${RUNC_COMMIT:+"COMMIT=${RUNC_COMMIT}"}
 }
 
 src_install() {
