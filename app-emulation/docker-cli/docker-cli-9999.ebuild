@@ -2,7 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-EGO_PN='github.com/docker/cli/...'
+GITHUB_URI='github.com/docker/cli'
+EGO_PN="$GITHUB_URI/..."
 
 case "${PV}" in
 	*9999)
@@ -12,7 +13,7 @@ case "${PV}" in
 	*)
 		MY_PV="${PV/_/-}"
 		EGIT_COMMIT="v${MY_PV}"
-		SRC_URI="https://${EGO_PN%/...}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
+		SRC_URI="https://${GITHUB_URI}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
 		KEYWORDS="~amd64"
 		inherit golang-vcs-snapshot
 		;;
@@ -30,11 +31,11 @@ RDEPEND="
 	!<app-emulation/docker-17.06
 "
 
-S="${WORKDIR}/${P}/src/${EGO_PN%/...}"
+S="${WORKDIR}/${P}/src/${GITHUB_URI}"
 
 src_compile() {
 	export GOPATH="${WORKDIR}/${P}"
-	LDFLAGS= emake
+	emake LDFLAGS= VERSION="$(< VERSION)" GITCOMMIT="$EGIT_COMMIT" dynbinary
 }
 
 src_install() {
