@@ -44,7 +44,9 @@ CDEPEND="
 
 DEPEND="
 	${CDEPEND}
+
 	dev-go/go-md2man
+
 	btrfs? (
 		>=sys-fs/btrfs-progs-3.16.1
 	)
@@ -54,11 +56,13 @@ DEPEND="
 # https://github.com/docker/docker/blob/master/project/PACKAGERS.md#optional-dependencies
 RDEPEND="
 	${CDEPEND}
+
 	!app-emulation/docker-bin
 	>=net-firewall/iptables-1.4
 	sys-process/procps
 	>=dev-vcs/git-1.7
 	>=app-arch/xz-utils-4.9
+
 	>=app-emulation/containerd-0.2.5 <app-emulation/containerd-0.3
 	|| (
 		>=app-emulation/runc-1.0.0_rc3[apparmor?,seccomp?]
@@ -66,6 +70,7 @@ RDEPEND="
 	)
 	app-emulation/docker-proxy
 	container-init? ( >=sys-process/tini-0.13.0[static] )
+
 	!!app-emulation/docker-cli
 "
 
@@ -199,7 +204,7 @@ pkg_setup() {
 
 src_prepare() {
 	default
-	[[ ${PV} == *9999* ]] && DOCKER_GITCOMMIT=$(git rev-parse HEAD)
+	[[ ${PV} == *9999* ]] && DOCKER_GITCOMMIT="$(git rev-parse --short HEAD)"
 }
 
 src_compile() {
@@ -209,12 +214,13 @@ src_compile() {
 	# see https://github.com/tianon/docker-overlay/pull/10
 	export CGO_CFLAGS="-I${ROOT}/usr/include"
 	export CGO_LDFLAGS="-L${ROOT}/usr/$(get_libdir)"
+
 	# if we're building from a tarball, we need the GITCOMMIT value
 	[ "$DOCKER_GITCOMMIT" ] && export DOCKER_GITCOMMIT
 
-	# Fake golang layout
-	ln -s  docker-ce/components/engine ../docker || die
-	ln -s  docker-ce/components/cli ../cli || die
+	# fake golang layout
+	ln -s docker-ce/components/engine ../docker || die
+	ln -s docker-ce/components/cli ../cli || die
 
 	# let's set up some optional features :)
 	export DOCKER_BUILDTAGS=''
@@ -242,15 +248,22 @@ src_compile() {
 
 	# build daemon
 	./hack/make.sh dynbinary || die 'dynbinary failed'
+
 	# build man pages
 	./man/md2man-all.sh || die "unable to generate man pages"
 
-	popd || die
+	popd || die # components/engine
 
 	pushd components/cli || die
+
 	# build cli
-	LDFLAGS="$(usex hardened '-extldflags -fno-PIC')" GITCOMMIT=${DOCKER_GITCOMMIT} ./scripts/build/dynbinary || die
-	popd || die
+	emake \
+		LDFLAGS="$(usex hardened '-extldflags -fno-PIC' '')" \
+		VERSION="$(cat ../../VERSION)" \
+		GITCOMMIT="${DOCKER_GITCOMMIT}" \
+		dynbinary || die
+
+	popd || die # components/cli
 }
 
 src_install() {
@@ -260,7 +273,7 @@ src_install() {
 	use container-init && dosym tini /usr/bin/docker-init
 
 	pushd components/engine || die
-	newbin bundles/latest/dynbinary-daemon/dockerd-*-dev dockerd
+	newbin "$(readlink -f bundles/latest/dynbinary-daemon/dockerd)" dockerd
 
 	newinitd contrib/init/openrc/docker.initd docker
 	newconfd contrib/init/openrc/docker.confd docker
@@ -285,14 +298,14 @@ src_install() {
 	# note: intentionally not using "doins" so that we preserve +x bits
 	dodir /usr/share/${PN}/contrib
 	cp -R contrib/* "${ED}/usr/share/${PN}/contrib"
-	popd || die
+	popd || die # components/engine
 
 	pushd components/cli || die
 	newbin build/docker-* docker
 	dobashcomp contrib/completion/bash/*
 	insinto /usr/share/zsh/site-functions
 	doins contrib/completion/zsh/_*
-	popd || die
+	popd || die # components/cli
 }
 
 pkg_postinst() {
