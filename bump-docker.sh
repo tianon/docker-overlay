@@ -44,16 +44,24 @@ if [ ! -e app-emulation/docker/docker-$ebuildVersion.ebuild ]; then
 		app-emulation/docker/docker-9999.ebuild \
 		app-emulation/docker/docker-$ebuildVersion.ebuild
 fi
-commit="$(git ls-remote --tags https://github.com/docker/docker.git "refs/tags/v$newVersion^{}" | cut -b -7)"
+commit="$({
+	git ls-remote --tags https://github.com/docker/docker-ce.git "refs/tags/v$newVersion^{}"
+	git ls-remote --tags https://github.com/docker/docker.git "refs/tags/v$newVersion^{}"
+} | cut -b -7)"
 if [ -z "$commit" ]; then
-	commit="$(git ls-remote --tags https://github.com/docker/docker.git "refs/tags/v$newVersion" | cut -b -7)"
+	commit="$({
+		git ls-remote --tags https://github.com/docker/docker-ce.git "refs/tags/v$newVersion"
+		git ls-remote --tags https://github.com/docker/docker.git "refs/tags/v$newVersion"
+	} | cut -b -7)"
 fi
 sed -i 's/DOCKER_GITCOMMIT=".*"/DOCKER_GITCOMMIT="'$commit'"/' app-emulation/docker/docker-$ebuildVersion.ebuild
-eval "$(emerge --info | grep ^DISTDIR=)"
-: ${DISTDIR:=/usr/portage/distfiles}
-if [ ! -s "$DISTDIR/docker-$ebuildVersion.tar.gz" ]; then
-	wget -O "$DISTDIR/docker-$ebuildVersion.tar.gz" "https://github.com/docker/docker/archive/v${newVersion}.tar.gz"
-fi
+
+#eval "$(emerge --info | grep ^DISTDIR=)"
+#: ${DISTDIR:=/usr/portage/distfiles}
+#if [ ! -s "$DISTDIR/docker-$ebuildVersion.tar.gz" ]; then
+#	wget -O "$DISTDIR/docker-$ebuildVersion.tar.gz" "https://github.com/docker/docker/archive/v${newVersion}.tar.gz"
+#fi
+
 ebuild app-emulation/docker/docker-$ebuildVersion.ebuild digest
 #git add app-emulation/docker/docker-$ebuildVersion.ebuild
 

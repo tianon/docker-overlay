@@ -17,7 +17,7 @@ else
 	else
 		MY_PV="$PV-ce"
 	fi
-	DOCKER_GITCOMMIT=""
+	DOCKER_GITCOMMIT="7f8486a"
 	EGIT_COMMIT="v${MY_PV}"
 	SRC_URI="https://${EGO_PN}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64"
@@ -204,7 +204,7 @@ pkg_setup() {
 
 src_prepare() {
 	default
-	[[ ${PV} == *9999* ]] && DOCKER_GITCOMMIT="$(git rev-parse --short HEAD)"
+	[[ ${PV} == *9999* ]] && DOCKER_GITCOMMIT="7f8486a"
 }
 
 src_compile() {
@@ -302,9 +302,6 @@ src_install() {
 
 	pushd components/cli || die
 	newbin build/docker-* docker
-	dobashcomp contrib/completion/bash/*
-	insinto /usr/share/zsh/site-functions
-	doins contrib/completion/zsh/_*
 	popd || die # components/cli
 }
 
