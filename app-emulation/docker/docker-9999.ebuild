@@ -249,9 +249,6 @@ src_compile() {
 	# build daemon
 	./hack/make.sh dynbinary || die 'dynbinary failed'
 
-	# build man pages
-	./man/md2man-all.sh || die "unable to generate man pages"
-
 	popd || die # components/engine
 
 	pushd components/cli || die
@@ -262,6 +259,13 @@ src_compile() {
 		VERSION="$(cat ../../VERSION)" \
 		GITCOMMIT="${DOCKER_GITCOMMIT}" \
 		dynbinary || die
+
+	# build man pages
+	go build -o gen-manpages github.com/docker/cli/man || die
+	./gen-manpages --root . --target ./man/man1 || die
+	./man/md2man-all.sh -q || die
+	rm gen-manpages || die
+	# see "components/cli/scripts/docs/generate-man.sh" (which also does "go get" for go-md2man)
 
 	popd || die # components/cli
 }
@@ -284,12 +288,6 @@ src_install() {
 
 	dodoc AUTHORS CONTRIBUTING.md CHANGELOG.md NOTICE README.md
 	dodoc -r docs/*
-	doman man/man*/*
-
-	dobashcomp contrib/completion/bash/*
-
-	insinto /usr/share/zsh/site-functions
-	doins contrib/completion/zsh/_*
 
 	insinto /usr/share/vim/vimfiles
 	doins -r contrib/syntax/vim/ftdetect
@@ -301,10 +299,15 @@ src_install() {
 	popd || die # components/engine
 
 	pushd components/cli || die
+
 	newbin build/docker-* docker
+
+	doman man/man*/*
+
 	dobashcomp contrib/completion/bash/*
 	insinto /usr/share/zsh/site-functions
 	doins contrib/completion/zsh/_*
+
 	popd || die # components/cli
 }
 
