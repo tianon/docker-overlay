@@ -63,10 +63,10 @@ RDEPEND="
 	>=dev-vcs/git-1.7
 	>=app-arch/xz-utils-4.9
 
-	>=app-emulation/containerd-0.2.5 <app-emulation/containerd-0.3
+	>=app-emulation/containerd-0.2.9 <app-emulation/containerd-0.3
 	|| (
-		>=app-emulation/runc-1.0.0_rc3[apparmor?,seccomp?]
-		app-emulation/docker-runc[apparmor?,seccomp?]
+		>app-emulation/runc-1.0.0_rc3[apparmor?,seccomp?]
+		>=app-emulation/docker-runc-1.0.0_rc3_p20170607[apparmor?,seccomp?]
 	)
 	app-emulation/docker-proxy
 	container-init? ( >=sys-process/tini-0.13.0[static] )
