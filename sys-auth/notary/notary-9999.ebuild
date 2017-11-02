@@ -5,19 +5,19 @@
 EAPI=5
 
 DESCRIPTION="Notary project comprises a server and a client for running and interacting with trusted collections"
-HOMEPAGE="https://github.com/docker/notary"
+HOMEPAGE="https://github.com/theupdateframework/notary"
 SRC_URI=""
 
 inherit eutils
 
 if [[ ${PV} == *9999 ]]; then
 	SRC_URI=""
-	EGIT_REPO_URI="git://github.com/docker/${PN}.git"
+	EGIT_REPO_URI="git://github.com/theupdateframework/${PN}.git"
 	inherit git-2
 else
 	MY_PV="${PV/_/-}"
 	MY_P="${PN}-${MY_PV}"
-	SRC_URI="https://github.com/docker/${PN}/archive/v${MY_PV}.tar.gz -> ${MY_P}.tar.gz"
+	SRC_URI="https://github.com/theupdateframework/${PN}/archive/v${MY_PV}.tar.gz -> ${MY_P}.tar.gz"
 	S="${WORKDIR}/${MY_P}"
 	KEYWORDS="~amd64"
 fi
@@ -36,9 +36,9 @@ src_prepare() {
 
 src_compile() {
 	export GOPATH="${T}/gopath"
-	mkdir -pv "$GOPATH/src/github.com/docker" || die
-	ln -sv "${S}" "$GOPATH/src/github.com/docker/${PN}" || die
-	cd "${T}/gopath/src/github.com/docker/${PN}" || die
+	mkdir -pv "$GOPATH/src/github.com/theupdateframework" || die
+	ln -sv "${S}" "$GOPATH/src/github.com/theupdateframework/${PN}" || die
+	cd "${T}/gopath/src/github.com/theupdateframework/${PN}" || die
 	go install -v ./cmd/... || die
 }
 
