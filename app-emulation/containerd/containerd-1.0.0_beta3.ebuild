@@ -5,6 +5,7 @@ EAPI=6
 EGO_PN="github.com/containerd/${PN}"
 
 MY_PV="${PV/_/-}"
+MY_PV="${MY_PV/-beta/-beta.}" # TODO figure out how to use versionator for this properly
 case "${PV}" in
 	*9999)
 		inherit golang-vcs
