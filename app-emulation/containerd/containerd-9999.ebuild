@@ -28,8 +28,8 @@ IUSE="btrfs"
 DEPEND=""
 RDEPEND="
 	|| (
-		>=app-emulation/runc-1.0.0_rc2[seccomp]
-		>=app-emulation/docker-runc-1.0.0_rc2[seccomp]
+		>=app-emulation/runc-1.0.0_rc4[seccomp]
+		>=app-emulation/docker-runc-1.0.0_rc4[seccomp]
 	)
 	sys-libs/libseccomp
 "
