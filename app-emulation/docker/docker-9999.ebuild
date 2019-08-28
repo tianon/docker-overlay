@@ -277,7 +277,7 @@ src_install() {
 	use container-init && dosym tini /usr/bin/docker-init
 
 	pushd components/engine || die
-	newbin "$(readlink -f bundles/latest/dynbinary-daemon/dockerd)" dockerd
+	newbin "$(readlink -f bundles/dynbinary-daemon/dockerd)" dockerd
 
 	newinitd contrib/init/openrc/docker.initd docker
 	newconfd contrib/init/openrc/docker.confd docker
